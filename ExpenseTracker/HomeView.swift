@@ -20,6 +20,14 @@ struct HomeView: View {
                 Gauge(value: 0.3) {
                     
                 }
+                HStack {
+                    VStack(alignment: .leading, content: {
+                        Text("Remaining").frame(maxWidth: .infinity, alignment: .leading)
+                    })
+                    VStack(alignment: .trailing, content: {
+                        Text("72%").frame(maxWidth: .infinity, alignment: .trailing)
+                    })
+                }
             }
             .frame(maxWidth: .infinity)
             .padding(.all, 20)
@@ -47,7 +55,7 @@ struct HomeView: View {
                 }.frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical,10)
                     .background(
-                        RoundedRectangle(cornerSize: CGSize(width: 2, height: 2))
+                        RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
                             .fill(Color(.cyan))
                     )
             }.padding(.vertical, 12)
