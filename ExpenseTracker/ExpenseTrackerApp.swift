@@ -14,16 +14,19 @@ struct ExpenseTrackerApp: App {
     var body: some Scene {
         WindowGroup {
             TabView {
-                Tab ("", systemImage: "pencil.circle", content: {
+                Tab ("", systemImage: "house", content: {
                     HomeView()
                 })
-                Tab ("", systemImage: "pencil.circle", content: {
+                Tab ("", systemImage: "magnifyingglass", content: {
                     ContentView()
                 })
-                Tab ("", systemImage: "pencil.circle", content: {
+                Tab ("", systemImage: "plus", content: {
                     ContentView()
                 })
-                Tab ("", systemImage: "pencil.circle", content: {
+                Tab ("", systemImage: "chart.pie.fill", content: {
+                    ContentView()
+                })
+                Tab ("", systemImage: "person.fill", content: {
                     ContentView()
                 })
             }
