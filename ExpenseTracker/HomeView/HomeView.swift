@@ -12,14 +12,13 @@ struct HomeView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, content: {
-                Text("Welcome Back!").frame(maxWidth: .infinity, alignment: .leading).bold().font(.title2)
-                Text(Date().formatted(.dateTime.month(.wide).day())).frame(maxWidth: .infinity, alignment: .leading).font(.title3)
-                    .bold()
+                Text("Welcome back \(HomeViewData.userName)!").frame(maxWidth: .infinity, alignment: .leading).bold().font(.title2)
+                Text(HomeViewData.currentDate).frame(maxWidth: .infinity, alignment: .leading).font(.title3)
                 
                 VStack {
                     Text("Monthly budget").frame(maxWidth: .infinity, alignment: .leading).fontWeight(.semibold)
-                    Text("$3200").bold().font(.system(size: 18))
-                    Gauge(value: 0.3) {
+                    Text("$\(HomeViewData.totalBudget)").bold().font(.system(size: 18))
+                    Gauge(value: HomeViewData.balancePercentage) {
                         
                     }
                     HStack {
@@ -27,7 +26,7 @@ struct HomeView: View {
                             Text("Remaining").frame(maxWidth: .infinity, alignment: .leading)
                         })
                         VStack(alignment: .trailing, content: {
-                            Text("72%").frame(maxWidth: .infinity, alignment: .trailing)
+                            Text("\(HomeViewData.remaining)%").frame(maxWidth: .infinity, alignment: .trailing)
                         })
                     }
                 }
@@ -43,7 +42,7 @@ struct HomeView: View {
                 HStack(spacing: 16) {
                     VStack {
                         Text("Income")
-                        Text("5000")
+                        Text(HomeViewData.totalIncome.description)
                     }
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical,10)
@@ -53,7 +52,7 @@ struct HomeView: View {
                     )
                     VStack {
                         Text("Expense")
-                        Text("2000")
+                        Text(HomeViewData.totalExpense.description)
                     }.frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical,10)
                         .background(
@@ -90,21 +89,6 @@ struct HomeView: View {
 
     }
 }
-struct TransactionModel: Identifiable, Hashable {
-    let id: String
-    
-    let title: String
-    let time: String
-    let price: String
-    let percentage: String
-    init(title: String, time: String, price: String, percentage: String) {
-        self.title = title
-        self.time = time
-        self.price = price
-        self.percentage = percentage
-        self.id = UUID().uuidString
-    }
+#Preview {
+    HomeView()
 }
-//#Preview {
-//    HomeView()
-//}
