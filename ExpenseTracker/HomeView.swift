@@ -105,6 +105,6 @@ struct TransactionModel: Identifiable, Hashable {
         self.id = UUID().uuidString
     }
 }
-#Preview {
-    HomeView()
-}
+//#Preview {
+//    HomeView()
+//}
