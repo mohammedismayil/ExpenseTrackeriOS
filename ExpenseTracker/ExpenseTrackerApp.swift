@@ -24,7 +24,7 @@ struct ExpenseTrackerApp: App {
                     RatingContainerView()
                 })
                 Tab ("", systemImage: "chart.pie.fill", content: {
-                    ContentView()
+                    SampleUserDetailsView(userDetails: [])
                 })
                 Tab ("", systemImage: "person.fill", content: {
                     ContentView()
