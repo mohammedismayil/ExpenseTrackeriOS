@@ -27,7 +27,12 @@ struct ExpenseTrackerApp: App {
                     SampleUserDetailsView(userDetails: [])
                 })
                 Tab ("", systemImage: "person.fill", content: {
-                    ContentView()
+                    if  LoginViewModel().isLoggedIn {
+                        LoggedInUserView()
+                    } else {
+                        LoginView()
+                    }
+
                 })
             }
         }
