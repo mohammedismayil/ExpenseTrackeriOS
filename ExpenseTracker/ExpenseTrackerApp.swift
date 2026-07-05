@@ -7,10 +7,11 @@
 
 import SwiftUI
 import CoreData
+import SwiftData
 
 @main
 struct ExpenseTrackerApp: App {
-
+    @State private var loginViewModel = LoginViewModel()
     var body: some Scene {
         WindowGroup {
             TabView {
@@ -18,7 +19,7 @@ struct ExpenseTrackerApp: App {
                     HomeView()
                 })
                 Tab ("", systemImage: "magnifyingglass", content: {
-                    ContentView()
+                    SampleUserListView()
                 })
                 Tab ("", systemImage: "plus", content: {
                     RatingContainerView()
@@ -27,7 +28,7 @@ struct ExpenseTrackerApp: App {
                     SampleUserDetailsView(userDetails: [])
                 })
                 Tab ("", systemImage: "person.fill", content: {
-                    if  LoginViewModel().isLoggedIn {
+                    if  loginViewModel.isLoggedIn {
                         LoggedInUserView()
                     } else {
                         LoginView()
@@ -35,6 +36,6 @@ struct ExpenseTrackerApp: App {
 
                 })
             }
-        }
+        }.modelContainer(for: UserEntity.self)
     }
 }
