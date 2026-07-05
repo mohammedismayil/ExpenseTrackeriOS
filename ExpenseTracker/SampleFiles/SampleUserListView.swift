@@ -15,7 +15,6 @@ struct SampleUserListView: View {
         NavigationStack {
             VStack {
                 Text("User List view")
-
                 List() {
                     ForEach(users) { user in
                         Text(user.name)
@@ -39,10 +38,12 @@ struct SampleUserListView: View {
 }
 
 @Model
-class UserEntity: Identifiable {
+final class UserEntity: Identifiable {
+    var id: String
     var name: String
     init(name: String) {
         self.name = name
+        self.id = UUID().uuidString
     }
 }
 
