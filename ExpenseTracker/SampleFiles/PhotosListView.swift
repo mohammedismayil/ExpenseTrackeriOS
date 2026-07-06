@@ -65,6 +65,9 @@ struct CatalogView: View {
                 
             }.buttonStyle(.glassProminent)
         }
+        .background(.thickMaterial)
+        .mask(RoundedRectangle(cornerRadius: 16))
+        .padding(.bottom,8)
        
     }
 }
