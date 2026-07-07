@@ -9,12 +9,12 @@ import SwiftUI
 import Combine
 
 struct PhotosListView: View {
-    @StateObject var viewModel: PhotosViewModel = PhotosViewModel()
+    @StateObject var viewModel: PhotosListViewModel = PhotosListViewModel()
     var body: some View {
         NavigationStack {
             List() {
                 ForEach(viewModel.photos) { photo in
-                    CatalogView(photo: photo)
+                    CatalogView(viewModel: PhotoViewModel(photo: photo))
                 }
             }
         }
@@ -26,7 +26,7 @@ struct PhotosListView: View {
     }
 }
 
-class PhotosViewModel : ObservableObject {
+class PhotosListViewModel : ObservableObject {
     @Published var photos: [PhotoModel] = []
     @Published var error: Error?
     
@@ -51,23 +51,55 @@ class PhotosViewModel : ObservableObject {
     }
 }
 
+class PhotoViewModel: ObservableObject {
+    @Published var photo: PhotoModel
+    @Published var error: Error?
+    
+    init(photo: PhotoModel, error: Error? = nil) {
+        self.photo = photo
+        self.error = error
+    }
+    
+    func fetchPhoto() async {
+        let url = photo.url
+        do {
+            let (data,resp) = try await URLSession.shared.data(from: url)
+            if let response = resp as? HTTPURLResponse, response.statusCode == 200 {
+            } else {
+                error = PhotoError.decodeError
+            }
+        } catch {
+            self.error = PhotoError.decodeError
+        }
+        
+    }
+}
+
 struct CatalogView: View {
-    var photo: PhotoModel
+    @StateObject var viewModel: PhotoViewModel
     var body: some View {
         VStack {
-            AsyncImage(url: photo.url) { image in
-                image.resizable().frame(width: 200, height: 200).aspectRatio(contentMode: .fill)
-            } placeholder: {
-                ProgressView()
+            if let _ = viewModel.error {
+                Text("Photo fetch error")
+            } else {
+                AsyncImage(url: viewModel.photo.url) { image in
+                    image.resizable().frame(width: 200, height: 200).aspectRatio(contentMode: .fill)
+                } placeholder: {
+                    ProgressView()
+                }
+                Text(viewModel.photo.title)
+                Button("Save") {
+                    
+                }.buttonStyle(.glassProminent)
             }
-            Text(photo.title)
-            Button("Save") {
-                
-            }.buttonStyle(.glassProminent)
+            
         }
         .background(.thickMaterial)
         .mask(RoundedRectangle(cornerRadius: 16))
         .padding(.bottom,8)
+        .task {
+            await viewModel.fetchPhoto()
+        }
        
     }
 }
