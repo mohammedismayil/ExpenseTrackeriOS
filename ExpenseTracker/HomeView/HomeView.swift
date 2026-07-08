@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
+    @StateObject var viewModel: HomeViewModel = HomeViewModel()
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -90,9 +92,13 @@ struct HomeView: View {
                     }.padding(.all,16)
                     .background(Color(.secondarySystemGroupedBackground))
                     .cornerRadius(12)
+                    
+                    Text(viewModel.dashboardData?.userData.name ?? "")
                         
                 }).padding(.horizontal, 14)
             }.background(Color(.systemGroupedBackground))
+        }.task {
+            await viewModel.fetchDashboard()
         }
 
     }
