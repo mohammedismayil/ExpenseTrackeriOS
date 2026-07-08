@@ -34,6 +34,36 @@
             endingLineNumber = "45"
             landmarkName = "fetchPhotos()"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3D1550A9-F3D6-4F3B-827C-04CA0005DF4D - fd7ec47940842a18"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for ExpenseTracker.PhotosListViewModel.fetchPhotos() async -&gt; ()"
+                  moduleName = "ExpenseTracker.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/PhotosListView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45">
+               </Location>
+               <Location
+                  uuid = "3D1550A9-F3D6-4F3B-827C-04CA0005DF4D - bea25adc35ee809"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for ExpenseTracker.PhotosListViewModel.fetchPhotos() async -&gt; ()"
+                  moduleName = "ExpenseTracker.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/PhotosListView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -49,6 +79,98 @@
             startingLineNumber = "47"
             endingLineNumber = "47"
             landmarkName = "fetchPhotos()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "55EEC54C-023E-418B-9AE0-94D01DD9BDEC - fd7ec47940842ade"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for ExpenseTracker.PhotosListViewModel.fetchPhotos() async -&gt; ()"
+                  moduleName = "ExpenseTracker.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/PhotosListView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47">
+               </Location>
+               <Location
+                  uuid = "55EEC54C-023E-418B-9AE0-94D01DD9BDEC - bea25adc35ee8cf"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for ExpenseTracker.PhotosListViewModel.fetchPhotos() async -&gt; ()"
+                  moduleName = "ExpenseTracker.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/PhotosListView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "47"
+                  endingLineNumber = "47">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "66F09D28-B15C-4916-9C89-773791A5CD76"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ExpenseTracker/SampleFiles/GRPC/GRPCSampleView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "38"
+            endingLineNumber = "38"
+            landmarkName = "fetchUsers()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "66F09D28-B15C-4916-9C89-773791A5CD76 - de6e0be154209d12"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for ExpenseTracker.GRPCSampleView.fetchUsers() async -&gt; ()"
+                  moduleName = "ExpenseTracker.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/GRPC/GRPCSampleView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "38"
+                  endingLineNumber = "38">
+               </Location>
+               <Location
+                  uuid = "66F09D28-B15C-4916-9C89-773791A5CD76 - 12268d60c9dfa92f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) suspend resume partial function for ExpenseTracker.GRPCSampleView.fetchUsers() async -&gt; ()"
+                  moduleName = "ExpenseTracker.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/GRPC/GRPCSampleView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "38"
+                  endingLineNumber = "38">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F3657AFA-C3A7-4A33-94DB-9B6C93EC231F"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ExpenseTracker/SampleFiles/GRPC/GRPCSampleView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "35"
+            endingLineNumber = "35"
+            landmarkName = "fetchUsers()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

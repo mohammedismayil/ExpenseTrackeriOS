@@ -13,7 +13,7 @@ class HomeViewModel : ObservableObject {
     @Published var dashboardData: DashboardData?
     
     func fetchDashboard() async {
-        await fetchAsync()
+//        await fetchAsync()
     }
     
     func fetchByOrder() async {
@@ -31,7 +31,7 @@ class HomeViewModel : ObservableObject {
         async let expenses = fetchExpenses()
         async let categories = fetchCategories()
         
-        self.dashboardData = DashboardData(expenses: expenses!, categories: categories!, userData: userDetails!)
+        self.dashboardData = await DashboardData(expenses: expenses!, categories: categories!, userData: userDetails!)
         print("Total duration: \(Date().timeIntervalSince(start))")
     }
     

@@ -35,6 +35,9 @@ struct ExpenseTrackerApp: App {
                     }
 
                 })
+                Tab ("", systemImage: "person.fill", content: {
+                    GRPCSampleView()
+                })
             }
         }.modelContainer(for: UserEntity.self)
     }
