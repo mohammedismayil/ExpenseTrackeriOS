@@ -46,10 +46,24 @@ public enum User_UserService: Sendable {
                 type: .unary
             )
         }
+        /// Namespace for "GetCategories" metadata.
+        public enum GetCategories: Sendable {
+            /// Request type for "GetCategories".
+            public typealias Input = User_GetCategoriesRequest
+            /// Response type for "GetCategories".
+            public typealias Output = User_GetCategoriesResponse
+            /// Descriptor for "GetCategories".
+            public static let descriptor = GRPCCore.MethodDescriptor(
+                service: GRPCCore.ServiceDescriptor(fullyQualifiedService: "user.UserService"),
+                method: "GetCategories",
+                type: .unary
+            )
+        }
         /// Descriptors for all methods in the "user.UserService" service.
         public static let descriptors: [GRPCCore.MethodDescriptor] = [
             GetUserProfile.descriptor,
-            GetAllUsers.descriptor
+            GetAllUsers.descriptor,
+            GetCategories.descriptor
         ]
     }
 }
@@ -109,6 +123,25 @@ extension User_UserService {
             deserializer: some GRPCCore.MessageDeserializer<User_UserListResponse>,
             options: GRPCCore.CallOptions,
             onResponse handleResponse: @Sendable @escaping (GRPCCore.ClientResponse<User_UserListResponse>) async throws -> Result
+        ) async throws -> Result where Result: Sendable
+
+        /// Call the "GetCategories" method.
+        ///
+        /// - Parameters:
+        ///   - request: A request containing a single `User_GetCategoriesRequest` message.
+        ///   - serializer: A serializer for `User_GetCategoriesRequest` messages.
+        ///   - deserializer: A deserializer for `User_GetCategoriesResponse` messages.
+        ///   - options: Options to apply to this RPC.
+        ///   - handleResponse: A closure which handles the response, the result of which is
+        ///       returned to the caller. Returning from the closure will cancel the RPC if it
+        ///       hasn't already finished.
+        /// - Returns: The result of `handleResponse`.
+        func getCategories<Result>(
+            request: GRPCCore.ClientRequest<User_GetCategoriesRequest>,
+            serializer: some GRPCCore.MessageSerializer<User_GetCategoriesRequest>,
+            deserializer: some GRPCCore.MessageDeserializer<User_GetCategoriesResponse>,
+            options: GRPCCore.CallOptions,
+            onResponse handleResponse: @Sendable @escaping (GRPCCore.ClientResponse<User_GetCategoriesResponse>) async throws -> Result
         ) async throws -> Result where Result: Sendable
     }
 
@@ -191,6 +224,36 @@ extension User_UserService {
                 onResponse: handleResponse
             )
         }
+
+        /// Call the "GetCategories" method.
+        ///
+        /// - Parameters:
+        ///   - request: A request containing a single `User_GetCategoriesRequest` message.
+        ///   - serializer: A serializer for `User_GetCategoriesRequest` messages.
+        ///   - deserializer: A deserializer for `User_GetCategoriesResponse` messages.
+        ///   - options: Options to apply to this RPC.
+        ///   - handleResponse: A closure which handles the response, the result of which is
+        ///       returned to the caller. Returning from the closure will cancel the RPC if it
+        ///       hasn't already finished.
+        /// - Returns: The result of `handleResponse`.
+        public func getCategories<Result>(
+            request: GRPCCore.ClientRequest<User_GetCategoriesRequest>,
+            serializer: some GRPCCore.MessageSerializer<User_GetCategoriesRequest>,
+            deserializer: some GRPCCore.MessageDeserializer<User_GetCategoriesResponse>,
+            options: GRPCCore.CallOptions = .defaults,
+            onResponse handleResponse: @Sendable @escaping (GRPCCore.ClientResponse<User_GetCategoriesResponse>) async throws -> Result = { response in
+                try response.message
+            }
+        ) async throws -> Result where Result: Sendable {
+            try await self.client.unary(
+                request: request,
+                descriptor: User_UserService.Method.GetCategories.descriptor,
+                serializer: serializer,
+                deserializer: deserializer,
+                options: options,
+                onResponse: handleResponse
+            )
+        }
     }
 }
 
@@ -246,6 +309,31 @@ extension User_UserService.ClientProtocol {
             request: request,
             serializer: GRPCProtobuf.ProtobufSerializer<User_EmptyRequest>(),
             deserializer: GRPCProtobuf.ProtobufDeserializer<User_UserListResponse>(),
+            options: options,
+            onResponse: handleResponse
+        )
+    }
+
+    /// Call the "GetCategories" method.
+    ///
+    /// - Parameters:
+    ///   - request: A request containing a single `User_GetCategoriesRequest` message.
+    ///   - options: Options to apply to this RPC.
+    ///   - handleResponse: A closure which handles the response, the result of which is
+    ///       returned to the caller. Returning from the closure will cancel the RPC if it
+    ///       hasn't already finished.
+    /// - Returns: The result of `handleResponse`.
+    public func getCategories<Result>(
+        request: GRPCCore.ClientRequest<User_GetCategoriesRequest>,
+        options: GRPCCore.CallOptions = .defaults,
+        onResponse handleResponse: @Sendable @escaping (GRPCCore.ClientResponse<User_GetCategoriesResponse>) async throws -> Result = { response in
+            try response.message
+        }
+    ) async throws -> Result where Result: Sendable {
+        try await self.getCategories(
+            request: request,
+            serializer: GRPCProtobuf.ProtobufSerializer<User_GetCategoriesRequest>(),
+            deserializer: GRPCProtobuf.ProtobufDeserializer<User_GetCategoriesResponse>(),
             options: options,
             onResponse: handleResponse
         )
@@ -311,6 +399,35 @@ extension User_UserService.ClientProtocol {
             metadata: metadata
         )
         return try await self.getAllUsers(
+            request: request,
+            options: options,
+            onResponse: handleResponse
+        )
+    }
+
+    /// Call the "GetCategories" method.
+    ///
+    /// - Parameters:
+    ///   - message: request message to send.
+    ///   - metadata: Additional metadata to send, defaults to empty.
+    ///   - options: Options to apply to this RPC, defaults to `.defaults`.
+    ///   - handleResponse: A closure which handles the response, the result of which is
+    ///       returned to the caller. Returning from the closure will cancel the RPC if it
+    ///       hasn't already finished.
+    /// - Returns: The result of `handleResponse`.
+    public func getCategories<Result>(
+        _ message: User_GetCategoriesRequest,
+        metadata: GRPCCore.Metadata = [:],
+        options: GRPCCore.CallOptions = .defaults,
+        onResponse handleResponse: @Sendable @escaping (GRPCCore.ClientResponse<User_GetCategoriesResponse>) async throws -> Result = { response in
+            try response.message
+        }
+    ) async throws -> Result where Result: Sendable {
+        let request = GRPCCore.ClientRequest<User_GetCategoriesRequest>(
+            message: message,
+            metadata: metadata
+        )
+        return try await self.getCategories(
             request: request,
             options: options,
             onResponse: handleResponse
