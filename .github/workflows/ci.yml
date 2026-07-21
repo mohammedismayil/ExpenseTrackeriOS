@@ -33,6 +33,7 @@ jobs:
             -project ExpenseTracker.xcodeproj \
             -scheme ExpenseTracker \
             -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' \
+            IPHONEOS_DEPLOYMENT_TARGET=17.0 \
             CODE_SIGNING_ALLOWED=NO \
             -resultBundlePath TestResults.xcresult
 
