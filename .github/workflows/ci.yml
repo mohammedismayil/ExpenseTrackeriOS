@@ -1,0 +1,44 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: macos-15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.app
+
+      - name: Show available simulators
+        run: xcrun simctl list devicetypes
+
+      - name: Build
+        run: |
+          xcodebuild build \
+            -project ExpenseTracker.xcodeproj \
+            -scheme ExpenseTracker \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Run unit + UI tests
+        run: |
+          xcodebuild test \
+            -project ExpenseTracker.xcodeproj \
+            -scheme ExpenseTracker \
+            -destination 'platform=iOS Simulator,name=iPhone 16,OS=latest' \
+            CODE_SIGNING_ALLOWED=NO \
+            -resultBundlePath TestResults.xcresult
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults.xcresult
