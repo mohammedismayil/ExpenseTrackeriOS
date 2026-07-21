@@ -91,7 +91,7 @@ struct CatalogView: View {
                 if #available(iOS 26.0, *) {
                     Button("Save") {
                         
-                    }.buttonStyle(.glassProminent)
+                    }/*.buttonStyle(.glassProminent)*/
                 } else {
                     // Fallback on earlier versions
                 }

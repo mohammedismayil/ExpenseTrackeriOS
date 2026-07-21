@@ -13,7 +13,7 @@ struct LoggedInUserView: View {
         if #available(iOS 26.0, *) {
             Button("Logout") {
                 LoginViewModel.logout()
-            }.buttonStyle(.glassProminent)
+            }/*.buttonStyle(.glassProminent)*/
         } else {
             // Fallback on earlier versions
         }
