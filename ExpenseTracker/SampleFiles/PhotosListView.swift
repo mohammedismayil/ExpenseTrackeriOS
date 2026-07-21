@@ -63,7 +63,7 @@ class PhotoViewModel: ObservableObject {
     func fetchPhoto() async {
         let url = photo.url
         do {
-            let (data,resp) = try await URLSession.shared.data(from: url)
+            let (_,resp) = try await URLSession.shared.data(from: url)
             if let response = resp as? HTTPURLResponse, response.statusCode == 200 {
             } else {
                 error = PhotoError.decodeError
@@ -88,9 +88,13 @@ struct CatalogView: View {
                     ProgressView()
                 }
                 Text(viewModel.photo.title)
-                Button("Save") {
-                    
-                }.buttonStyle(.glassProminent)
+                if #available(iOS 26.0, *) {
+                    Button("Save") {
+                        
+                    }.buttonStyle(.glassProminent)
+                } else {
+                    // Fallback on earlier versions
+                }
             }
             
         }

@@ -10,7 +10,7 @@ import SwiftUI
 struct TransactionDetailView: View {
     var transaction: TransactionModel
     var body: some View {
-        Text("Transaction detail: \(transaction.title)")
+        Text("Transaction detail: \(String(describing: transaction.title))")
     }
 }
 

@@ -10,9 +10,13 @@ import SwiftUI
 struct LoggedInUserView: View {
     var body: some View {
         Text("Logged In User IAM")
-        Button("Logout") {
-            LoginViewModel.logout()
-        }.buttonStyle(.glassProminent)
+        if #available(iOS 26.0, *) {
+            Button("Logout") {
+                LoginViewModel.logout()
+            }.buttonStyle(.glassProminent)
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 
