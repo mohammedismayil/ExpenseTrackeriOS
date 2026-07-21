@@ -27,7 +27,7 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             CODE_SIGNING_ALLOWED=NO
 
-     - name: Run unit + UI tests
+      - name: Run unit + UI tests
         run: |
           xcodebuild test \
             -project ExpenseTracker.xcodeproj \
