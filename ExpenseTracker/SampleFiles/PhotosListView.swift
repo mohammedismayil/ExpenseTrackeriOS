@@ -10,6 +10,7 @@ import Combine
 
 struct PhotosListView: View {
     @StateObject var viewModel: PhotosListViewModel = PhotosListViewModel()
+    @State var searchText: String
     var body: some View {
         NavigationStack {
             List() {
@@ -18,6 +19,17 @@ struct PhotosListView: View {
                 }
             }
         }
+        .onChange(of: searchText, { oldValue, newValue in
+            if newValue.isEmpty {
+                Task {
+                    await viewModel.fetchPhotos()
+                }
+            } else {
+                viewModel.searchPhotos(name: newValue)
+            }
+            
+        })
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .automatic))
         .navigationTitle("Photos List")
         .task {
             await viewModel.fetchPhotos()
@@ -26,9 +38,16 @@ struct PhotosListView: View {
     }
 }
 
+@MainActor
 class PhotosListViewModel : ObservableObject {
     @Published var photos: [PhotoModel] = []
     @Published var error: Error?
+    private var searchTask: Task<Void, Never>?
+    private let mockService = MockService()
+    
+    deinit {
+        searchTask?.cancel()
+    }
     
     func fetchPhotos() async {
         guard let url = URL(string: "https://picsum.photos/v2/list") else {
@@ -36,7 +55,8 @@ class PhotosListViewModel : ObservableObject {
             return
         }
         do {
-            if let (data,resp) = try? await   URLSession.shared.data(from: url) {
+            let (data,resp) = try await   URLSession.shared.data(from: url)
+            
                 guard let re = resp as? HTTPURLResponse, re.statusCode == 200 else {
                     error = PhotoError.fetchError
                     return
@@ -46,8 +66,22 @@ class PhotosListViewModel : ObservableObject {
                 } else {
                     error = PhotoError.decodeError
                 }
+            
+        } catch {
+            self.error = error
+        }
+    }
+    
+    func searchPhotos(name: String) {
+        searchTask?.cancel()
+        searchTask = Task { [weak self] in
+            guard let self else { return }
+            let photos = await mockService.searchPhotos(title: name)
+            if !Task.isCancelled {
+                self.photos =  photos ?? []
             }
         }
+        
     }
 }
 
@@ -132,5 +166,5 @@ enum PhotoError: Error {
 }
 
 #Preview {
-    PhotosListView()
+    PhotosListView(searchText: "")
 }
