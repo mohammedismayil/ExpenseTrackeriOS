@@ -21,10 +21,7 @@ struct ProductsListView: View {
                         } else {
                             ProgressView()
                         }
-                        
                     }
-
-                    
                 }
             }.task {
                 viewModel.fetchProducts()
