@@ -20,7 +20,8 @@ struct ExpenseTrackerApp: App {
                         HomeView()
                     })
                     Tab ("", systemImage: "magnifyingglass", content: {
-                        SampleUserListView()
+//                        SampleUserListView()
+                        ProductsListView()
                     })
                     Tab ("", systemImage: "plus", content: {
                         PhotosListView(searchText: "")
