@@ -16,25 +16,31 @@ class ProductsListViewModel: ObservableObject {
     }
     
     func fetchProduct(id: Int) async {
+        print("🔵 Started fetchProduct:", id)
         guard let url = URL(string: "https://dummyjson.com/products/\(id)") else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
             let decoder = JSONDecoder()
             let product = try decoder.decode(ProductModel.self, from: data)
+            print("🟢 Finished fetchProduct:", id)
             if let index = products.firstIndex(where: { $0.id == product.id }) {
                 products[index] = product
             }
         } catch {
-            
+            print("🔴 Cancelled fetchProduct:", id)
         }
     }
     
     func fetchAllProducts() async {
         let productIds = products.map { $0.id }
-        for id in productIds {
-            await fetchProduct(id: id)
-            
+        await withTaskGroup(of: Void.self) { group in
+            for id in productIds {
+                group.addTask {
+                    await self.fetchProduct(id: id)
+                }
+            }
         }
+        
     }
 }
 
