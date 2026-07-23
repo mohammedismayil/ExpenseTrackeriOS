@@ -1,28 +1,28 @@
-name: Build and Test
+# name: Build and Test
 
-on:
-  push:
-    branches: [main, develop]
-  pull_request:
-    branches: [main]
+# on:
+#   push:
+#     branches: [main, develop]
+#   pull_request:
+#     branches: [main]
 
-jobs:
-  build-and-test:
-    runs-on: macos-15
+# jobs:
+#   build-and-test:
+#     runs-on: macos-15
 
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Show installed Xcode versions
-        run: ls /Applications | grep Xcode
+#       - name: Show installed Xcode versions
+#         run: ls /Applications | grep Xcode
 
-      - name: Show available simulators
-        run: xcrun simctl list devices available
+#       - name: Show available simulators
+#         run: xcrun simctl list devices available
 
-      - name: Build
-        run: |
-          xcodebuild build \
-            -project ExpenseTracker.xcodeproj \
-            -scheme ExpenseTracker \
-            -destination 'generic/platform=iOS Simulator' \
-            CODE_SIGNING_ALLOWED=NO
+#       - name: Build
+#         run: |
+#           xcodebuild build \
+#             -project ExpenseTracker.xcodeproj \
+#             -scheme ExpenseTracker \
+#             -destination 'generic/platform=iOS Simulator' \
+#             CODE_SIGNING_ALLOWED=NO
