@@ -22,7 +22,8 @@ struct ExpenseTrackerApp: App {
                     Tab ("", systemImage: "magnifyingglass", content: {
 //                        SampleUserListView()
 //                        ProductsListView()
-                        FeedView()
+//                        FeedView()
+                        SampleTestingView()
                     })
                     Tab ("", systemImage: "plus", content: {
                         PhotosListView(searchText: "")
