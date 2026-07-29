@@ -45,7 +45,7 @@ class ZombieDog: NSObject {
 class SampleTestingDetailViewModel : ObservableObject {
     
     @Published var name: String = "Initial name"
-    
+    @Published var service: DummyAPIService = DummyAPIService()
    
     
     deinit {
@@ -53,18 +53,33 @@ class SampleTestingDetailViewModel : ObservableObject {
     }
     
     func zombieExample() {
-//        let service: DummyAPIService = DummyAPIService()
-//        service.fetchUser { [weak self] in
-//            self?.name = "zombie"
-//        }
+        service.fetchDelayedUser { [unowned self] in
+            self.name = "zombie"
+        }
+    }
+    
+    func leakExample() {
+        service.fetchUser {
+            self.name = "zombie"
+        }
     }
     
     
     
 }
 class DummyAPIService {
+    var callBack: (() -> Void)?
+    
+    deinit {
+        print("DummyAPIService deallocated")
+    }
+    
     func fetchUser(closure: @escaping () ->Void) {
-        DispatchQueue.global().asyncAfter(deadline: .now() + 3) {
+        self.callBack = closure
+    }
+    
+    func fetchDelayedUser(closure: @escaping () ->Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now()+4) {
             closure()
         }
     }

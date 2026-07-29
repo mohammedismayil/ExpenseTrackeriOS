@@ -11,7 +11,7 @@ struct SampleTestingDetailView: View {
     @State var child: ZombieChild?
     @State var parent: ZombieParent?
     @State var name: String
-//    let viewModel = SampleTestingDetailViewModel()
+    @StateObject var viewModel = SampleTestingDetailViewModel()
     var body: some View {
         Text("Sample Testing Detail View")
             .onAppear {
@@ -29,7 +29,11 @@ struct SampleTestingDetailView: View {
     }
     
     func zombieExample() {
-//        viewModel.zombieExample()
+        viewModel.zombieExample()
+    }
+    
+    func leakExample() {
+        viewModel.leakExample()
     }
 }
 
