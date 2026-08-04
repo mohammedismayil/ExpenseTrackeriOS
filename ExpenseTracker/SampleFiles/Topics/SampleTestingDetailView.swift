@@ -15,7 +15,10 @@ struct SampleTestingDetailView: View {
     var body: some View {
         Text("Sample Testing Detail View")
             .onAppear {
-                zombieExample()
+                Task {
+                    await actorsClassExample()
+                }
+               
             }
     }
     
@@ -34,6 +37,23 @@ struct SampleTestingDetailView: View {
     
     func leakExample() {
         viewModel.leakExample()
+    }
+    
+    func actorsClassExample() async {
+        
+        let counter = CounterClass()
+
+        await withTaskGroup { group in
+            group.addTask {
+                for _ in 0..<10_000 {
+                    await counter.increment()
+                }
+                for _ in 0..<10_000 {
+                    await counter.increment()
+                }
+                print(await counter.count)
+            }
+        }
     }
 }
 
