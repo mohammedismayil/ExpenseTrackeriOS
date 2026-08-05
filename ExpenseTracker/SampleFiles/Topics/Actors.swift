@@ -8,7 +8,15 @@
 import Foundation
 import UIKit
 
-actor CounterClass {
+class CounterClass {
+    var count = 0
+    
+    func increment(){
+        count += 1
+    }
+}
+
+actor CounterActor {
     var count = 0
     
     func increment(){
