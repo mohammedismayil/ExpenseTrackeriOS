@@ -13,10 +13,12 @@ struct SampleTestingDetailView: View {
     @State var name: String
     @StateObject var viewModel = SampleTestingDetailViewModel()
     var body: some View {
-        Text("Sample Testing Detail View")
+        Text("Sample Testing Detail View: \(viewModel.name)")
             .onAppear {
-                Task {
-                    await actorsExample()
+                Task.detached {
+                    print("Before:", Thread.isMainThread)
+                    await viewModel.mainActorExample()
+                    print("After:", Thread.isMainThread)
                 }
                
             }

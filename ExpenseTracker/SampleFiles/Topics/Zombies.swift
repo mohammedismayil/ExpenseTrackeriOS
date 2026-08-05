@@ -42,6 +42,8 @@ class ZombieDog: NSObject {
         print("\(name) barking...")
     }
 }
+
+@MainActor
 class SampleTestingDetailViewModel : ObservableObject {
     
     @Published var name: String = "Initial name"
@@ -64,6 +66,17 @@ class SampleTestingDetailViewModel : ObservableObject {
         }
     }
     
+    func weakExample() {
+        service.fetchDelayedUserInMainThread { [weak self] in
+            self?.name = "Iwillkillmyself"
+        }
+    }
+    
+    func mainActorExample() {
+        print("Inside:", Thread.isMainThread)
+        self.name = "jack"
+    }
+    
     
     
 }
@@ -80,6 +93,12 @@ class DummyAPIService {
     
     func fetchDelayedUser(closure: @escaping () ->Void) {
         DispatchQueue.global().asyncAfter(deadline: .now()+4) {
+            closure()
+        }
+    }
+    
+    func fetchDelayedUserInMainThread(closure: @escaping () ->Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+4) {
             closure()
         }
     }
