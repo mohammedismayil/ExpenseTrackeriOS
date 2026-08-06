@@ -15,12 +15,16 @@ struct SampleTestingDetailView: View {
     var body: some View {
         Text("Sample Testing Detail View: \(viewModel.name)")
             .onAppear {
-                Task.detached {
-                    print("Before:", Thread.isMainThread)
-                    await viewModel.mainActorExample()
-                    print("After:", Thread.isMainThread)
+//                Task.detached {
+//                    print("Before:", Thread.isMainThread)
+//                    await viewModel.mainActorExample()
+//                    print("After:", Thread.isMainThread)
+//                }
+//                fetchUserUsingOldAsyncAPI()
+                Task {
+                    await fetchUserUsingContinuation()
                 }
-               
+                
             }
     }
     
@@ -79,6 +83,17 @@ struct SampleTestingDetailView: View {
         }
         print(await counter.count)
         
+    }
+    
+    func fetchUserUsingOldAsyncAPI() {
+        viewModel.fetchUserOldClosureAPI { (name) in
+            print("Fetched using old api \(name)")
+        }
+    }
+    
+    func fetchUserUsingContinuation() async {
+        let user = await viewModel.fetchUsingContinuation()
+        print(user)
     }
 }
 

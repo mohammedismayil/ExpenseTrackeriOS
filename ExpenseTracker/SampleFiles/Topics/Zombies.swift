@@ -77,6 +77,20 @@ class SampleTestingDetailViewModel : ObservableObject {
         self.name = "jack"
     }
     
+    func fetchUserOldClosureAPI(closure: @escaping (String) -> ()) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 2, execute: {
+            closure("UserA")
+        })
+    }
+    
+    func fetchUsingContinuation() async -> String {
+        await withCheckedContinuation { contiuation in
+            fetchUserOldClosureAPI { name in
+                contiuation.resume(returning: name)
+            }
+        }
+    }
+    
     
     
 }
