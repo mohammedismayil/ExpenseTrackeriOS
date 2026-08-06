@@ -12,6 +12,7 @@ struct SampleTestingDetailView: View {
     @State var parent: ZombieParent?
     @State var name: String
     @StateObject var viewModel = SampleTestingDetailViewModel()
+    @State var downloadTask: Task<Void, Never>?
     var body: some View {
         Text("Sample Testing Detail View: \(viewModel.name)")
             .onAppear {
@@ -21,10 +22,18 @@ struct SampleTestingDetailView: View {
 //                    print("After:", Thread.isMainThread)
 //                }
 //                fetchUserUsingOldAsyncAPI()
-                Task {
-                    await fetchUserUsingContinuation()
-                }
+//                Task {
+//                    await fetchUserUsingContinuation()
+//                }
                 
+//                dowloadUserImage()
+                
+            }
+            .onDisappear(perform: {
+                downloadTask?.cancel()
+            })
+            .task {
+                await checkIsCancelledFlow()
             }
     }
     
@@ -94,6 +103,64 @@ struct SampleTestingDetailView: View {
     func fetchUserUsingContinuation() async {
         let user = await viewModel.fetchUsingContinuation()
         print(user)
+    }
+    
+    func dowloadUserImage() {
+        downloadTask = Task {
+            await downloadImage(id: "1")
+        }
+    }
+    
+    func downloadMultipleImages() async {
+        print("Starting dowloading images")
+        await withTaskGroup { group in
+            for i in 0..<5 {
+                if Task.isCancelled {
+                    print("Parent cancelled")
+                    break
+                }
+                group.addTask {
+                    if Task.isCancelled {
+                        print("Stopped")
+                        return
+                    }
+                    let image = await downloadImage(id: i.description)
+                }
+            }
+        }
+    }
+    
+    func downloadImage(id: String) async -> String {
+        print("Starting downloading image: \(id)")
+        do {
+            try await Task.sleep(for: .seconds(2))
+            print("completed downloading image\(id)")
+            return "Image"
+        } catch is CancellationError {
+            print("Cancelled downloading image\(id)")
+            return "CancelledImage"
+        } catch {
+            print("error downloading image\(id)")
+            return "ErrorImage"
+        }
+    }
+    
+    func checkIsCancelledFlow() async {
+        
+        downloadTask = Task {
+            for i in 0..<100 {
+                if Task.isCancelled {
+                    print("Iam already cancelled")
+                    return
+                }
+                print("Working \(i)")
+                do {
+                    try await Task.sleep(for: .seconds(1))
+                } catch {
+                    print(error)
+                }
+            }
+        }
     }
 }
 
