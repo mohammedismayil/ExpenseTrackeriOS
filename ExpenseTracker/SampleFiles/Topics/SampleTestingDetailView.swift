@@ -27,14 +27,16 @@ struct SampleTestingDetailView: View {
 //                }
                 
 //                dowloadUserImage()
+                let sample = GCDSample()
+                sample.checkConcurrentQueue()
                 
             }
             .onDisappear(perform: {
                 downloadTask?.cancel()
             })
-            .task {
-                await checkIsCancelledFlow()
-            }
+//            .task {
+//                await checkIsCancelledFlow()
+//            }
     }
     
     func memoryLeakExample() {
