@@ -11,7 +11,7 @@ struct SampleTestingView: View {
     var body: some View {
         NavigationStack {
             NavigationLink {
-                SampleTestingDetailView(name: "")
+                GCDImageFetchView()
             } label: {
                 Text("Sample Testing")
             }
