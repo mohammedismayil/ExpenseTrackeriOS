@@ -22,6 +22,7 @@ struct ExpenseTrackerApp: App {
                 TabView {
                     Tab ("", systemImage: "house", content: {
 //                        HomeView()
+                        ResumableDownloadView()
                     })
                     Tab ("", systemImage: "magnifyingglass", content: {
 //                        SampleUserListView()
