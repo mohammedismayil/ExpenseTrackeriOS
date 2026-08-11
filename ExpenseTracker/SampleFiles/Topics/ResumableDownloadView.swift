@@ -43,7 +43,7 @@ struct DownloadRing: View {
                 .font(.caption)
                 .fontWeight(.semibold).contentTransition(.numericText())
         }
-        .frame(width: 60, height: 60)
+        .frame(width: 30, height: 30)
         .animation(
             .linear(duration: 0.1),
             value: progress
@@ -58,38 +58,43 @@ struct ResumableDownloadView: View {
     @State var showPdf: Bool = false
     
     var body: some View {
-        if downloader.path != "", let url = URL(string: downloader.path) {
-            Text(url.lastPathComponent).onTapGesture {
-                showPdf = true
-            }
-            .sheet(isPresented: $showPdf) {
-                PDFPreview(url: url)
-            }
-        } else {
-            HStack {
-                switch downloader.downloadState {
-                case .idle:
-                    Text("Download")
-                case .downloading:
-                    DownloadRing(progress: downloader.progress)
-                        .progressViewStyle(.circular).scaleEffect(2)
-                    Text("Downloading")
-                case .paused:
-                    DownloadRing(progress: downloader.progress)
-                        .progressViewStyle(.circular).scaleEffect(2)
-                    Text("Resume")
-                case .completed:
-                    EmptyView()
-                case .failed:
-                    DownloadRing(progress: downloader.progress)
-                        .progressViewStyle(.circular).scaleEffect(2)
-                    Text("Retry")
+        List(downloader.downloadItems) { item in
+            if item.path != "", let path = item.path, let url = URL(string: path) {
+                Text(url.lastPathComponent).onTapGesture {
+                    showPdf = true
                 }
-                
-            }.onTapGesture {
-                downloader.checkAndDownload()
-                
+                .sheet(isPresented: $showPdf) {
+                    PDFPreview(url: url)
+                }
+            } else {
+                HStack {
+                    switch item.state {
+                    case .idle:
+                        Text("Download")
+                    case .downloading:
+                        DownloadRing(progress: item.progress ?? 0)
+                            .progressViewStyle(.circular).scaleEffect(2)
+                        Text("Downloading")
+                    case .paused:
+                        DownloadRing(progress: item.progress ?? 0)
+                            .progressViewStyle(.circular).scaleEffect(2)
+                        Text("Resume")
+                    case .completed:
+                        EmptyView()
+                    case .failed:
+                        DownloadRing(progress: item.progress ?? 0)
+                            .progressViewStyle(.circular).scaleEffect(2)
+                        Text("Retry")
+                    }
+                    
+                }
+                .onTapGesture {
+                    downloader.startDownload(item: item)
+                    
+                }
             }
+        }.onAppear {
+            downloader.fetchDowloads()
         }
             
     }
@@ -114,6 +119,10 @@ final class ResumableDownloader: NSObject, ObservableObject {
          configuration.isDiscretionary = false
          return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
+    
+    @Published var downloadItems: [ResumableDownloadItem] = []
+    
+    @Published var tasks: [Int: URLSessionDownloadTask] = [:]
     
     @Published var downloadState: DownloadState = .idle
     
@@ -167,6 +176,81 @@ final class ResumableDownloader: NSObject, ObservableObject {
             downloadTask?.resume()
         }
     }
+    
+    func fetchDowloads() {
+        downloadItems = [ResumableDownloadItem(id: "1", taskId: 1, state: .idle),ResumableDownloadItem(id: "2", taskId: 2, state: .idle),ResumableDownloadItem(id: "3", taskId: 3, state: .idle),ResumableDownloadItem(id: "4", taskId: 4, state: .idle),ResumableDownloadItem(id: "5", taskId: 5, state: .idle)]
+    }
+    
+    func startDownload(item: ResumableDownloadItem) {
+        switch item.state {
+        case .idle:
+            downloadItem(item: item)
+        case .downloading:
+            pauseItem(item: item)
+        case .paused:
+            resumeItem(item: item)
+        case .completed:
+            break
+        case .failed:
+            resume()
+        }
+    }
+    
+    func downloadItem(item: ResumableDownloadItem) {
+        if let url = URL(string: "https://huggingface.co/dlptest02/dlp_testing/resolve/main/49mb.pdf") {
+            let urlRequest = URLRequest(url: url)
+            let task = session.downloadTask(with: urlRequest)
+            if let index = downloadItems.firstIndex(where: {$0.id == item.id}) {
+                downloadItems[index].taskId = task.taskIdentifier
+                downloadItems[index].state = .downloading
+                downloadItems[index].progress = 0
+                task.resume()
+            }
+        }
+    }
+    
+    func pauseItem(item: ResumableDownloadItem) {
+        let taskId = item.taskId
+        session.getAllTasks { tasks in
+            guard let task = tasks.first(where: {
+                $0.taskIdentifier == taskId
+            }) as? URLSessionDownloadTask else {
+                return
+            }
+
+            task.cancel { [weak self] resumeData in
+                guard let self else { return }
+
+                DispatchQueue.main.async {
+                    guard let index = self.downloadItems.firstIndex(
+                        where: { $0.id == item.id }
+                    ) else {
+                        return
+                    }
+
+                    self.downloadItems[index].resumeData = resumeData
+                    self.downloadItems[index].state = .paused
+
+                    print("Resume data:", resumeData?.count ?? 0)
+                }
+            }
+        }
+    }
+    
+    func resumeItem(item: ResumableDownloadItem) {
+        guard let index = self.downloadItems.firstIndex(
+            where: { $0.id == item.id }
+        ) else {
+            return
+        }
+        if let resumeData = item.resumeData {
+            let task = session.downloadTask(withResumeData: resumeData)
+            downloadItems[index].state = .downloading
+            downloadItems[index].taskId = task.taskIdentifier
+            downloadItems[index].progress = 0
+            task.resume()
+        }
+    }
 }
 extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
@@ -199,10 +283,10 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
             }
         let fileManager = FileManager.default
         
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            downloadState = .completed
-        }
+//        DispatchQueue.main.async { [weak self] in
+//            guard let self = self else { return }
+//            downloadState = .completed
+//        }
         do {
             let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let destination = documentsURL.appendingPathComponent("Sample.pdf")
@@ -213,7 +297,10 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
             print("file saved yay at : \(destination)")
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                path = destination.absoluteString
+                if let index = downloadItems.firstIndex(where: {$0.taskId == downloadTask.taskIdentifier}) {
+                    downloadItems[index].state = .completed
+                    downloadItems[index].path = destination.absoluteString
+                }
             }
             
         } catch {
@@ -231,7 +318,9 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            progress = downloadedMB / expectedMB
+            if let index = downloadItems.firstIndex(where: {$0.taskId == downloadTask.taskIdentifier}) {
+                downloadItems[index].progress = downloadedMB / expectedMB
+            }
         }
             print(
                 String(
@@ -297,6 +386,16 @@ struct PDFPreview: UIViewControllerRepresentable {
             url as NSURL
         }
     }
+}
+
+struct ResumableDownloadItem: Identifiable {
+    let id: String
+    var taskId: Int
+    var state: DownloadState
+    var path: String?
+    var progress: Double?
+    var resumeData: Data?
+    
 }
 #Preview {
     ResumableDownloadView()
