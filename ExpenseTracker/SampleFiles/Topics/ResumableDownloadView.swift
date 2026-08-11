@@ -71,12 +71,16 @@ struct ResumableDownloadView: View {
                     DownloadRing(progress: downloader.progress)
                         .progressViewStyle(.circular).scaleEffect(2)
                     Text("Downloading")
+                } else if downloader.isPaused {
+                    DownloadRing(progress: downloader.progress)
+                        .progressViewStyle(.circular).scaleEffect(2)
+                    Text("Resume")
                 } else {
                     Text("Download")
                 }
                 
             }.onTapGesture {
-                downloader.dowload()
+                downloader.checkAndDownload()
                 
             }
         }
@@ -95,22 +99,68 @@ final class ResumableDownloader: NSObject, ObservableObject {
     
     @Published var isDownloading: Bool = false
     
+    @Published var isPaused: Bool = false
+    
     @Published var progress: Double = 0
     
+    private var downloadTask: URLSessionDownloadTask?
+    
+    private var resumeData: Data?
+    
+    func checkAndDownload() {
+        if isDownloading {
+            pause()
+        } else if isPaused {
+            resume()
+        } else {
+            dowload()
+        }
+    }
+    
     func dowload() {
-        if let url = URL(string: "https://www.pdf995.com/samples/pdf.pdf") {
+        if let url = URL(string: "https://huggingface.co/dlptest02/dlp_testing/resolve/main/49mb.pdf") {
             let urlRequest = URLRequest(url: url)
-            let task = session.downloadTask(with: urlRequest)
+            downloadTask = session.downloadTask(with: urlRequest)
             isDownloading = true
-            task.resume()
+            downloadTask?.resume()
+        }
+    }
+    
+    func pause() {
+        downloadTask?.cancel { [weak self] data in
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                print("Resume data:", data?.count ?? 0)
+                self.resumeData = data
+                self.isPaused = true
+                self.isDownloading = false
+            }
+        }
+    }
+    
+    func resume() {
+        if let resumeData = resumeData {
+            downloadTask = session.downloadTask(withResumeData: resumeData)
+            isDownloading = true
+            isPaused = false
+            downloadTask?.resume()
         }
     }
 }
 extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
-        if error != nil {
-            isDownloading = false
-            print("File error")
+        if let error  {
+            let nsError = error as NSError
+
+                    if nsError.code == NSURLErrorCancelled {
+                        print("Download cancelled/paused")
+                        return
+                    }
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                isDownloading = false
+                isPaused = false
+            }
         } else {
             print("download compltetd")
         }
@@ -127,22 +177,19 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             isDownloading = false
+            isPaused = false
         }
         do {
             let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let destination = documentsURL.appendingPathComponent("Sample.pdf")
             if fileManager.fileExists(atPath: destination.path) {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    path = destination.absoluteString
-                }
-            } else {
-                try fileManager.moveItem(at: location, to: destination)
-                print("file saved yay at : \(destination)")
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    path = destination.absoluteString
-                }
+                try fileManager.removeItem(at: destination)
+            }
+            try fileManager.moveItem(at: location, to: destination)
+            print("file saved yay at : \(destination)")
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                path = destination.absoluteString
             }
             
         } catch {
