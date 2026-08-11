@@ -9,6 +9,48 @@ import SwiftUI
 import Combine
 import QuickLook
 
+struct DownloadRing: View {
+
+    let progress: Double
+
+    var body: some View {
+        ZStack {
+
+            // Background ring
+            Circle()
+                .stroke(
+                    .gray.opacity(0.2),
+                    lineWidth: 6
+                )
+
+            // Progress ring
+            Circle()
+                .trim(
+                    from: 0,
+                    to: progress
+                )
+                .stroke(
+                    .blue,
+                    style: StrokeStyle(
+                        lineWidth: 6,
+                        lineCap: .round
+                    )
+                )
+                .rotationEffect(.degrees(-90))
+
+            // Percentage
+            Text("\(Int(progress * 100))%")
+                .font(.caption)
+                .fontWeight(.semibold)
+        }
+        .frame(width: 60, height: 60)
+        .animation(
+            .linear(duration: 0.1),
+            value: progress
+        )
+    }
+}
+
 struct ResumableDownloadView: View {
     
     
@@ -25,7 +67,14 @@ struct ResumableDownloadView: View {
             }
         } else {
             HStack {
-                Text("Download")
+                if downloader.isDownloading {
+                    DownloadRing(progress: downloader.progress)
+                        .progressViewStyle(.circular).scaleEffect(2)
+                    Text("Downloading")
+                } else {
+                    Text("Download")
+                }
+                
             }.onTapGesture {
                 downloader.dowload()
                 
@@ -35,6 +84,8 @@ struct ResumableDownloadView: View {
     }
 }
 
+
+
 final class ResumableDownloader: NSObject, ObservableObject {
     @Published var path: String = ""
     
@@ -42,10 +93,15 @@ final class ResumableDownloader: NSObject, ObservableObject {
          URLSession(configuration: .default, delegate: self, delegateQueue: nil)
     }()
     
+    @Published var isDownloading: Bool = false
+    
+    @Published var progress: Double = 0
+    
     func dowload() {
-        if let url = URL(string: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf") {
+        if let url = URL(string: "https://www.pdf995.com/samples/pdf.pdf") {
             let urlRequest = URLRequest(url: url)
             let task = session.downloadTask(with: urlRequest)
+            isDownloading = true
             task.resume()
         }
     }
@@ -53,27 +109,66 @@ final class ResumableDownloader: NSObject, ObservableObject {
 extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: (any Error)?) {
         if error != nil {
+            isDownloading = false
             print("File error")
         } else {
             print("download compltetd")
         }
     }
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+        if let response = downloadTask.response as? HTTPURLResponse {
+                print("Status:", response.statusCode)
+                print("Headers:", response.allHeaderFields)
+                print("MIME:", response.mimeType)
+                print("Expected:", response.expectedContentLength)
+            }
         let fileManager = FileManager.default
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            isDownloading = false
+        }
         do {
             let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let destination = documentsURL.appendingPathComponent("Sample.pdf")
-            try fileManager.moveItem(at: location, to: destination)
-            print("file saved yay at : \(destination)")
-            
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                path = destination.absoluteString
+            if fileManager.fileExists(atPath: destination.path) {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    path = destination.absoluteString
+                }
+            } else {
+                try fileManager.moveItem(at: location, to: destination)
+                print("file saved yay at : \(destination)")
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    path = destination.absoluteString
+                }
             }
             
         } catch {
             print(error)
         }
+        
+    }
+    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+        print("totalBytesExpectedToWrite : \(totalBytesExpectedToWrite) - totalBytesWritten : \(totalBytesWritten)")
+        let downloadedMB =
+                Double(totalBytesWritten) / (1024 * 1024)
+
+            let expectedMB =
+                Double(totalBytesExpectedToWrite) / (1024 * 1024)
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            progress = downloadedMB / expectedMB
+        }
+            print(
+                String(
+                    format: "%.2f MB / %.2f MB",
+                    downloadedMB,
+                    expectedMB
+                )
+            )
         
     }
 }
