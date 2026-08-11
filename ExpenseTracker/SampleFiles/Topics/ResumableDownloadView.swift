@@ -54,7 +54,7 @@ struct DownloadRing: View {
 struct ResumableDownloadView: View {
     
     
-    @StateObject var downloader: ResumableDownloader = ResumableDownloader()
+    @StateObject var downloader: ResumableDownloader = ResumableDownloader.shared
     @State var showPdf: Bool = false
     
     var body: some View {
@@ -93,8 +93,13 @@ struct ResumableDownloadView: View {
 final class ResumableDownloader: NSObject, ObservableObject {
     @Published var path: String = ""
     
+    static let shared = ResumableDownloader()
+    
      lazy var session: URLSession = {
-         URLSession(configuration: .default, delegate: self, delegateQueue: nil)
+         let configuration = URLSessionConfiguration.background(withIdentifier: "ResumableDownloader")
+         configuration.sessionSendsLaunchEvents = true
+         configuration.isDiscretionary = false
+         return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
     
     @Published var isDownloading: Bool = false
@@ -106,6 +111,8 @@ final class ResumableDownloader: NSObject, ObservableObject {
     private var downloadTask: URLSessionDownloadTask?
     
     private var resumeData: Data?
+    
+    var backgroundCompletionHandler: (() -> ())?
     
     func checkAndDownload() {
         if isDownloading {
@@ -217,6 +224,14 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
                 )
             )
         
+    }
+    
+    func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        DispatchQueue.main.async { [weak self] in
+            print("forBackgroundURLSession")
+            guard let self = self else { return }
+            self.backgroundCompletionHandler = nil
+        }
     }
 }
 

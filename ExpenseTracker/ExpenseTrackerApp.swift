@@ -12,6 +12,8 @@ import SwiftData
 @main
 struct ExpenseTrackerApp: App {
     @State private var loginViewModel = LoginViewModel()
+    @UIApplicationDelegateAdaptor(Appdelegate.self)
+    var appdelegate
     var body: some Scene {
         
 //        WindowGroup {
