@@ -41,7 +41,7 @@ struct DownloadRing: View {
             // Percentage
             Text("\(Int(progress * 100))%")
                 .font(.caption)
-                .fontWeight(.semibold)
+                .fontWeight(.semibold).contentTransition(.numericText())
         }
         .frame(width: 60, height: 60)
         .animation(
@@ -67,16 +67,23 @@ struct ResumableDownloadView: View {
             }
         } else {
             HStack {
-                if downloader.isDownloading {
+                switch downloader.downloadState {
+                case .idle:
+                    Text("Download")
+                case .downloading:
                     DownloadRing(progress: downloader.progress)
                         .progressViewStyle(.circular).scaleEffect(2)
                     Text("Downloading")
-                } else if downloader.isPaused {
+                case .paused:
                     DownloadRing(progress: downloader.progress)
                         .progressViewStyle(.circular).scaleEffect(2)
                     Text("Resume")
-                } else {
-                    Text("Download")
+                case .completed:
+                    EmptyView()
+                case .failed:
+                    DownloadRing(progress: downloader.progress)
+                        .progressViewStyle(.circular).scaleEffect(2)
+                    Text("Retry")
                 }
                 
             }.onTapGesture {
@@ -88,7 +95,13 @@ struct ResumableDownloadView: View {
     }
 }
 
-
+enum DownloadState {
+    case idle
+    case downloading
+    case paused
+    case completed
+    case failed
+}
 
 final class ResumableDownloader: NSObject, ObservableObject {
     @Published var path: String = ""
@@ -102,9 +115,7 @@ final class ResumableDownloader: NSObject, ObservableObject {
          return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
     
-    @Published var isDownloading: Bool = false
-    
-    @Published var isPaused: Bool = false
+    @Published var downloadState: DownloadState = .idle
     
     @Published var progress: Double = 0
     
@@ -115,12 +126,17 @@ final class ResumableDownloader: NSObject, ObservableObject {
     var backgroundCompletionHandler: (() -> ())?
     
     func checkAndDownload() {
-        if isDownloading {
-            pause()
-        } else if isPaused {
-            resume()
-        } else {
+        switch downloadState {
+        case .idle:
             dowload()
+        case .downloading:
+            pause()
+        case .paused:
+            resume()
+        case .completed:
+            break
+        case .failed:
+            resume()
         }
     }
     
@@ -128,7 +144,7 @@ final class ResumableDownloader: NSObject, ObservableObject {
         if let url = URL(string: "https://huggingface.co/dlptest02/dlp_testing/resolve/main/49mb.pdf") {
             let urlRequest = URLRequest(url: url)
             downloadTask = session.downloadTask(with: urlRequest)
-            isDownloading = true
+            downloadState = .downloading
             downloadTask?.resume()
         }
     }
@@ -139,8 +155,7 @@ final class ResumableDownloader: NSObject, ObservableObject {
                 guard let self = self else { return }
                 print("Resume data:", data?.count ?? 0)
                 self.resumeData = data
-                self.isPaused = true
-                self.isDownloading = false
+                downloadState = .paused
             }
         }
     }
@@ -148,8 +163,7 @@ final class ResumableDownloader: NSObject, ObservableObject {
     func resume() {
         if let resumeData = resumeData {
             downloadTask = session.downloadTask(withResumeData: resumeData)
-            isDownloading = true
-            isPaused = false
+            downloadState = .downloading
             downloadTask?.resume()
         }
     }
@@ -165,10 +179,14 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
                     }
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                isDownloading = false
-                isPaused = false
+                downloadState = .failed
             }
         } else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                downloadState = .completed
+            }
+            
             print("download compltetd")
         }
     }
@@ -183,8 +201,7 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            isDownloading = false
-            isPaused = false
+            downloadState = .completed
         }
         do {
             let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -230,6 +247,7 @@ extension ResumableDownloader: URLSessionDownloadDelegate, URLSessionTaskDelegat
         DispatchQueue.main.async { [weak self] in
             print("forBackgroundURLSession")
             guard let self = self else { return }
+            self.backgroundCompletionHandler?()
             self.backgroundCompletionHandler = nil
         }
     }
