@@ -40,4 +40,29 @@ final class ExpenseTrackerUITests: XCTestCase {
             XCUIApplication().launch()
         }
     }
+    
+    
+    @MainActor
+    func testUserLogin() throws {
+        // UI tests must launch the application that they test.
+        let app = XCUIApplication()
+        app.launch()
+        let username = app.textFields["username"]
+        let password = app.secureTextFields["password"]
+        username.tap()
+        username.typeText("admin")
+        password.tap()
+        password.typeText("admin123")
+        let signInAction = app.buttons["signinAction"]
+        signInAction.tap()
+        XCTAssertTrue(app.staticTexts["home"].exists)
+        
+        
+        
+
+        // Use XCTAssert and related functions to verify your tests produce the correct results.
+        // XCUIAutomation Documentation
+        // https://developer.apple.com/documentation/xcuiautomation
+    }
+
 }
