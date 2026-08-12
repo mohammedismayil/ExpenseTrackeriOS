@@ -17,6 +17,7 @@ struct XCUITestDemoView: View {
         } else {
             TextField("Username", text: $username).accessibilityValue("username")
             SecureField("Username", text: $password).accessibilityValue("password")
+            PropertyObserverExampleView()
             Button("Signin") {
                 signIn()
             }.accessibilityLabel("signinAction")
