@@ -7,21 +7,24 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 struct OperationQueueExampleView: View {
+    @StateObject var viewModel: OperationQueueExampleViewModel = OperationQueueExampleViewModel()
     var body: some View {
         Text("OperationQueue")
+        Text(viewModel.displayText)
             .task {
                 let operationQueue = OperationQueue()
                 if let url = URL(string: "https://dummyjson.com/products/1") {
                     let fetchOperation = FetchDataOperation(url: url)
                     let parseOperation = ParseDataOperation(fetchOperation: fetchOperation)
+                    let displayOperation = DisplayOperation(parseOperation: parseOperation, viewModel: viewModel)
                     parseOperation.addDependency(fetchOperation)
+                    displayOperation.addDependency(parseOperation)
                     operationQueue.addOperation(fetchOperation)
                     operationQueue.addOperation(parseOperation)
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
-                        operationQueue.cancelAllOperations()
-                    })
+                    OperationQueue.main.addOperation(displayOperation)
                 }
                 
             }
@@ -105,6 +108,38 @@ class ParseDataOperation: Operation {
     }
 }
 
-//class DisplayOperation: Operation {
-//    var
-//}
+class DisplayOperation: Operation {
+    
+    var parseOperation: ParseDataOperation?
+    var viewModel: OperationQueueExampleViewModel
+    var dispatchSemaphore: DispatchSemaphore = DispatchSemaphore(value: 0)
+    
+    init(parseOperation: ParseDataOperation? = nil, viewModel: OperationQueueExampleViewModel) {
+        self.parseOperation = parseOperation
+        self.viewModel = viewModel
+    }
+    
+    
+    
+    override func main() {
+        print("Display operation started")
+        if self.isCancelled {
+            print("Display operation cancelled before starting")
+            return
+        }
+        guard let data = parseOperation?.parsedResult else {
+            return
+        }
+        processAndDisplay(data: data)
+    }
+    
+    func processAndDisplay(data: String) {
+        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
+            self.viewModel.displayText = data
+        })
+    }
+}
+
+class OperationQueueExampleViewModel: ObservableObject {
+    @Published var displayText: String = ""
+}
