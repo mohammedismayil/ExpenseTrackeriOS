@@ -25,7 +25,8 @@ struct ExpenseTrackerApp: App {
                     Tab ("", systemImage: "house", content: {
 //                        HomeView()
 //                        ResumableDownloadView()
-                        XCUITestDemoView()
+//                        XCUITestDemoView()
+                        OperationQueueExampleView()
                     })
                     Tab ("", systemImage: "magnifyingglass", content: {
 //                        SampleUserListView()
