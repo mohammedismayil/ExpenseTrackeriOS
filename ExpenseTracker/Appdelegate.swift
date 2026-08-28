@@ -8,10 +8,10 @@
 import Foundation
 import UIKit
 class Appdelegate: NSObject, UIApplicationDelegate {
-    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-        print("Background session: \(identifier)")
-        ResumableDownloader.shared.backgroundCompletionHandler = completionHandler
-    }
+//    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+//        print("Background session: \(identifier)")
+//        ResumableDownloader.shared.backgroundCompletionHandler = completionHandler
+//    }
     
     func application(
         _ application: UIApplication,
@@ -23,4 +23,16 @@ class Appdelegate: NSObject, UIApplicationDelegate {
 
         return true
     }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        NSLog("application did enter background")
+        print("application did tneter background")
+    }
+    
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        NSLog("application did enter foreground")
+        print("application did tneter applicationWillEnterForeground")
+    }
+    
+    
 }

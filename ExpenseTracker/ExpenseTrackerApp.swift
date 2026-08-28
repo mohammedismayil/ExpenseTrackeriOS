@@ -12,6 +12,7 @@ import SwiftData
 @main
 struct ExpenseTrackerApp: App {
     @State private var loginViewModel = LoginViewModel()
+    @Environment(\.scenePhase) private var scenePhase
     @UIApplicationDelegateAdaptor(Appdelegate.self)
     var appdelegate
     var body: some Scene {
@@ -25,8 +26,8 @@ struct ExpenseTrackerApp: App {
                     Tab ("", systemImage: "house", content: {
 //                        HomeView()
 //                        ResumableDownloadView()
-//                        XCUITestDemoView()
-                        OperationQueueExampleView()
+                        XCUITestDemoView()
+//                        OperationQueueExampleView()
                     })
                     Tab ("", systemImage: "magnifyingglass", content: {
 //                        SampleUserListView()
@@ -56,5 +57,18 @@ struct ExpenseTrackerApp: App {
                 // Fallback on earlier versions
             }
         }.modelContainer(for: UserEntity.self)
+            .onChange(of: scenePhase) { oldValue, newValue in
+                switch newValue {
+                    
+                case .background:
+                    print("App gone to background")
+                case .inactive:
+                    print("App gone to Inactive")
+                case .active:
+                    print("App gone to active")
+                @unknown default:
+                    print("Default state on appstate change")
+                }
+            }
     }
 }
