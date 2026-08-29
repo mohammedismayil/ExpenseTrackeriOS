@@ -11,6 +11,7 @@ struct XCUITestDemoView: View {
     @State var username: String = ""
     @State var password: String = ""
     @State var loggedIn: Bool = false
+    @Environment(\.scenePhase) private var scenePhase
     var body: some View {
         if loggedIn {
             Text("User loggedin").accessibilityLabel("home")
@@ -21,7 +22,22 @@ struct XCUITestDemoView: View {
             Button("Signin") {
                 signIn()
             }.accessibilityLabel("signinAction")
+                .onChange(of: scenePhase) { oldValue, newValue in
+                    switch newValue {
+                        
+                    case .background:
+                        print("App gone to background in XCUITestDemoView")
+                    case .inactive:
+                        print("App gone to Inactive XCUITestDemoView")
+                    case .active:
+                        print("App gone to active XCUITestDemoView")
+                    @unknown default:
+                        print("Default state on appstate change")
+                    }
+                }
         }
+        
+            
         
     }
     
