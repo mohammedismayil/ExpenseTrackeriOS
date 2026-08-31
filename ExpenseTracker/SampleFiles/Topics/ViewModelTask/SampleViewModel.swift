@@ -20,18 +20,20 @@ struct SampleUsersListView: View {
             } else {
                 List {
                     ForEach(viewModel.userData) { user in
-                        Text(user.name).onAppear {
-                            Task {
-                                await viewModel.fetchNextUsers()
-                            }
-                        }
+                        Text(user.name)
                     }
-                    if viewModel.fetchState == .paginationLoading {
+                    if viewModel.isNextPageNeeded {
                         HStack {
                             Spacer()
                             ProgressView()
                             Spacer()
-                        }
+                        }.frame(height: 40)
+                            .id(viewModel.pageNumber)
+                            .onAppear {
+                                Task {
+                                    await viewModel.fetchNextUsers()
+                                }
+                            }
                     }
                     
                 }
@@ -169,7 +171,7 @@ final class MockAPIService: UserServiceProtocol {
     }
 }
 
-enum FetchState {
+enum FetchState: Equatable {
     case idle
     case initialLoading
     case paginationLoading
