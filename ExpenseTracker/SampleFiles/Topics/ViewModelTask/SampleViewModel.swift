@@ -10,20 +10,24 @@ import Combine
 import SwiftUI
 
 struct SampleUsersListView: View {
-    @StateObject var viewModel: SampleViewModel = SampleViewModel()
+    @StateObject var viewModel: SampleViewModel = SampleViewModel(repository: SampleUserRepository(service: MockAPIService()))
     var body: some View {
-        List(viewModel.userData) { user in
-            Text(user.title)
-        }.onAppear {
-            Task {
-                await viewModel.fetchUsers()
+        if viewModel.error != nil {
+            Text("\(viewModel.error?.localizedDescription)")
+        } else {
+            List(viewModel.userData) { user in
+                Text(user.title)
+            }.onAppear {
+                Task {
+                    await viewModel.fetchUsers()
+                }
+                
             }
-            
         }
     }
 }
 
-class SampleUser: Decodable, Identifiable {
+struct SampleUser: Decodable, Identifiable {
     var id: Int
     var priority: Int
     var title: String
@@ -34,34 +38,42 @@ class SampleUser: Decodable, Identifiable {
     }
 }
 
-protocol FetchUserProtocol {
-    func fetchUsers() async -> [SampleUser]?
+protocol UserServiceProtocol {
+    func fetchUsers() async throws -> [SampleUser]
 }
 
-class SampleUserRepository {
+protocol UserRepositoryProtocol {
+    func fetchUsers() async throws -> [SampleUser]
+}
+
+final class SampleUserRepository: UserRepositoryProtocol {
+    func fetchUsers() async throws -> [SampleUser] {
+        try await service.fetchUsers()
+    }
     
-    var service: FetchUserProtocol
+    var service: UserServiceProtocol
     
-    init(service: FetchUserProtocol) {
+    init(service: UserServiceProtocol) {
         self.service = service
     }
-    func fetchUsers() async -> [SampleUser]? {
-        await service.fetchUsers()
-    }
-    
     
 }
-class FetchUserAPIService: FetchUserProtocol {
-    func fetchUsers() async -> [SampleUser]? {
+final class FetchUserAPIService: UserServiceProtocol {
+    func fetchUsers() async throws -> [SampleUser] {
         guard let url = URL(string: "sample") else {
             return []
         }
         do {
-            let (response, data) = try await URLSession.shared.data(from: url)
-            guard let decoder = try? JSONDecoder().decode([SampleUser].self, from: response) else { return [] }
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard let response  = response as? HTTPURLResponse else {
+                throw FetchUserError.noResponse
+            }
+            guard let decoder = try? JSONDecoder().decode([SampleUser].self, from: data) else {
+                throw FetchUserError.decodeError
+            }
             return decoder
         } catch {
-            return []
+            throw FetchUserError.noInternet
         }
         
     }
@@ -71,23 +83,39 @@ class FetchUserAPIService: FetchUserProtocol {
 class SampleViewModel: ObservableObject {
     @Published var userData: [SampleUser] = []
     
+    @Published var error: Error?
+    
+    private let repository: UserRepositoryProtocol
+    
+    init(repository: UserRepositoryProtocol) {
+        self.repository = repository
+    }
+    
     func fetchUsers() async {
-        let service: FetchUserProtocol = MockAPIService()
-        async let users = service.fetchUsers()
-        userData = await users?.sorted {
-            $0.priority > $1.priority
-        } ?? []
-        
+        do {
+            let users = try await repository.fetchUsers()
+            userData = users.sorted {
+                $0.priority > $1.priority
+            }
+        } catch {
+            self.error = error
+        }
     }
 }
 
-class MockAPIService: FetchUserProtocol {
-    func fetchUsers() async -> [SampleUser]? {
+final class MockAPIService: UserServiceProtocol {
+    func fetchUsers() async throws -> [SampleUser] {
         do {
             try await Task.sleep(for: .seconds(3))
             return [SampleUser(id: 1, priority: 1, title: "john"),SampleUser(id: 2, priority: 2, title: "peter")]
         } catch {
-            return []
+            throw FetchUserError.noResponse
         }
     }
+}
+
+enum FetchUserError: Error {
+    case noInternet
+    case decodeError
+    case noResponse
 }
