@@ -25,7 +25,8 @@ struct ExpenseTrackerApp: App {
             if #available(iOS 18.0, *) {
                 TabView {
                     Tab ("", systemImage: "house", content: {
-                        SampleUsersListView()
+                        SearchDebounceView()
+                        //                        SampleUsersListView()
 //                        HomeView()
 //                        ResumableDownloadView()
 //                        XCUITestDemoView()
