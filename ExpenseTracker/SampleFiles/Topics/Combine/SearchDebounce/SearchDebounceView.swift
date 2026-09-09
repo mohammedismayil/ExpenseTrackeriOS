@@ -9,28 +9,36 @@ import SwiftUI
 import Combine
 
 struct SearchDebounceView: View {
-    @State var searchText: String = ""
-    @State var cancellable: AnyCancellable?
-    @State var subject = PassthroughSubject<String, Never>()
+    @StateObject var viewModel: SearchViewModel = SearchViewModel()
     var body: some View {
         VStack {
             Text("SearchDebounceView")
-            TextField("Search", text: $searchText).onChange(of: searchText) { oldValue, newValue in
-                subject.send(newValue)
-            }
-        }
-        .onAppear {
-            cancellable = subject.debounce(for: .milliseconds(300), scheduler: RunLoop.main).sink(receiveValue: { value in
-                Task {
-                    await searchAPI(value: value)
-                }
-            })
+            TextField("Search", text: $viewModel.searchText)
         }
     }
+    
+    
+}
+
+class SearchViewModel: ObservableObject {
+    @Published var searchText: String = ""
+    
+    private var cancellable: AnyCancellable?
+    
+    init() {
+        cancellable = $searchText.debounce(for: .milliseconds(300), scheduler: RunLoop.main).sink(receiveValue: { [weak self] value  in
+            Task {
+                await self?.searchAPI(value: value)
+            }
+        })
+    }
+    
     
     func searchAPI(value: String) async {
         print("Search api called for \(value)")
     }
+    
+    
 }
 
 #Preview {
