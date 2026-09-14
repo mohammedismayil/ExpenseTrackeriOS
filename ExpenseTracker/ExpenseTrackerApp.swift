@@ -33,7 +33,8 @@ struct ExpenseTrackerApp: App {
 //                        OperationQueueExampleView()
                     })
                     Tab ("", systemImage: "magnifyingglass", content: {
-                        StateObjectSampleView()
+//                        MemoryLeakViewRepresentable()
+                                                StateObjectSampleView()
 //                        EnvironmentalObjectProductDetailView()
 //                        SampleUserListView()
 //                        ProductsListView()

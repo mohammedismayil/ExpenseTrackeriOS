@@ -11,17 +11,24 @@ import Combine
 struct StateObjectSampleView: View {
     @State var count: Int = 0
     var body: some View {
-        Text("StateObject vs ObservableObject")
-        HStack {
-            Button("+"){
-                count += 1
+        NavigationStack {
+            Text("StateObject vs ObservableObject")
+            HStack {
+                NavigationLink(destination: MemoryLeakViewRepresentable()) {
+                    Text("memory leak")
+                }
+                Button("+"){
+                    count += 1
+                   
+                }
+                Text("\(count)")
+                Button("-") {
+                    count -= 1
+                }
+                ResettingCounterView()
             }
-            Text("\(count)")
-            Button("-") {
-                count -= 1
-            }
-            ResettingCounterView()
         }
+        
         
     }
 }
