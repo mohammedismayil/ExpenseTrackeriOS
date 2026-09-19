@@ -30,8 +30,11 @@ class MemoryLeakViewController: UIViewController {
     }
     
     @objc func buttonAction() {
-        closure = {
-//            self.view.backgroundColor = .red
+        closure = { [weak self] in
+            guard let self = self else {
+                return 
+            }
+            self.view.backgroundColor = .red
         }
     }
 }
