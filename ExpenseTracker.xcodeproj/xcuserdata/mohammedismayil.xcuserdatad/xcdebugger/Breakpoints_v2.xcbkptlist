@@ -14,8 +14,8 @@
             filePath = "ExpenseTracker/SampleFiles/Topics/ViewModelTask/DemoViewModelView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "59"
-            endingLineNumber = "59"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
             landmarkName = "fetchUsers()"
             landmarkType = "7">
          </BreakpointContent>
@@ -30,40 +30,10 @@
             filePath = "ExpenseTracker/SampleFiles/Topics/ViewModelTask/DemoViewModelView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
+            startingLineNumber = "54"
+            endingLineNumber = "54"
             landmarkName = "fetchUsers()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "499DBEEB-3BC3-4C1A-BF3F-FEB312E3A580 - b863da965bd9de35"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for ExpenseTracker.DemoViewService.fetchUsers() async throws -&gt; Swift.Array&lt;ExpenseTracker.DemoUserModel&gt;"
-                  moduleName = "ExpenseTracker.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/Topics/ViewModelTask/DemoViewModelView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53">
-               </Location>
-               <Location
-                  uuid = "499DBEEB-3BC3-4C1A-BF3F-FEB312E3A580 - b863da965bd9de35"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for ExpenseTracker.DemoViewService.fetchUsers() async throws -&gt; Swift.Array&lt;ExpenseTracker.DemoUserModel&gt;"
-                  moduleName = "ExpenseTracker.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/Topics/ViewModelTask/DemoViewModelView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "53"
-                  endingLineNumber = "53">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

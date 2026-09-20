@@ -19,7 +19,7 @@ struct DemoViewModelView: View {
                 Text(item.name)
             }
         } else {
-            Text("Error state")
+            Text("Error state: \(viewModel.errorState)")
         }
         
         Button("Next action") {
@@ -44,6 +44,7 @@ class DemoViewRepository {
 }
 class DemoViewService {
     func fetchUsers() async throws -> [DemoUserModel] {
+        try Task.checkCancellation()
         let urlSession = URLSession.shared
         guard let url = URL(string: "https://jsonplaceholder.typicode.com/users") else {
             throw DemoViewErrors.urlError
@@ -79,12 +80,13 @@ class DemoViewModel: ObservableObject {
     func fetchUsers() async {
         do {
             isLoading = true
-            try await Task.sleep(for: .seconds(3))
+            try await Task.sleep(for: .seconds(4))
             users = try await repository.fetchUsers()
             isLoading = false
         } catch {
             isLoading = false
             if let parsedError = error as? DemoViewErrors {
+                print("error state : \(parsedError)")
                 errorState = parsedError
             }
         }
