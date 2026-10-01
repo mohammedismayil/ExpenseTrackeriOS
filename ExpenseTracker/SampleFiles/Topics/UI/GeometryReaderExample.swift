@@ -16,12 +16,6 @@ struct GeometryReaderExample: View {
                 }
                 .frame(height: proxy.size.height*1)
                 .background(.yellow)
-                
-//                VStack {
-//                    Text("Green")
-//                }
-//                .frame(height: proxy.size.height*0.2)
-//                .background(.green)
             }
             .onAppear() {
                 print(proxy.frame(in: .global).size)
