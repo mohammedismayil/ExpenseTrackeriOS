@@ -43,3 +43,19 @@ actor ImageCache {
         images = [:]
     }
 }
+
+
+class AsyncQuestions {
+    func getData() async throws -> String {
+        throw SampleError.unknownError
+    }
+    func sample() {
+        Task {
+            async let data = await getData()
+        }
+    }
+}
+
+enum SampleError: Error {
+    case unknownError
+}
