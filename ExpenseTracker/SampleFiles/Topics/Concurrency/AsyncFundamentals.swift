@@ -8,17 +8,32 @@
 import Foundation
 class AsyncFundamentals {
     func getUserData() async throws -> String {
-        try await Task.sleep(for: .seconds(3))
-        return "User"
+        do {
+            try await Task.sleep(for: .seconds(1))
+            return "User"
+        } catch {
+            print("\(error) catched on getUserData")
+        }
+        return ""
     }
     
     func getStatData() async throws -> String {
-        try await Task.sleep(for: .seconds(3))
-        return "Stat"
+        do {
+            try await Task.sleep(for: .seconds(3))
+            return "Stat"
+        } catch {
+            print("\(error) catched on getStatData")
+        }
+        return ""
     }
     
     func getMainData() async throws -> String {
-        try await Task.sleep(for: .seconds(3))
-        return "Main"
+        do {
+            try await Task.sleep(for: .seconds(1))
+            return "Main"
+        } catch {
+            print("\(error) catched on getMainData")
+        }
+        return ""
     }
 }

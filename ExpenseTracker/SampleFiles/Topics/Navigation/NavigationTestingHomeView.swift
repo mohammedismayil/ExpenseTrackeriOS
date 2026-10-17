@@ -31,14 +31,18 @@ struct NavigationTestingHomeView: View {
         }.onAppear {
             Task {
                 let obj = AsyncFundamentals()
-                let clock = ContinuousClock()
-                let time = try await clock.measure {
-                    async let main = try obj.getMainData()
-                    async let stat = try obj.getStatData()
-                    async let user = try obj.getUserData()
-                    print(await main,stat,user)
+                let myTask = Task {
+                    do {
+                        let main = try await obj.getMainData()
+                        let stat = try await obj.getStatData()
+                        let user = try await obj.getUserData()
+                        print("all done: \((main,stat,user))")
+                    } catch {
+                        print("\(error) catched on mytask")
+                    }
                 }
-               print("elapsed time \(time)")
+                try? await Task.sleep(for: .seconds(3))
+                myTask.cancel()
             }
             
         }
