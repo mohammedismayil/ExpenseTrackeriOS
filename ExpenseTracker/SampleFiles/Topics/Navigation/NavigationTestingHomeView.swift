@@ -28,6 +28,19 @@ struct NavigationTestingHomeView: View {
                 .navigationDestination(item: $selectedUser) { value in
                     NavigationTestingDetailView(user: value)
                 }
+        }.onAppear {
+            Task {
+                let obj = AsyncFundamentals()
+                let clock = ContinuousClock()
+                let time = try await clock.measure {
+                    async let main = try obj.getMainData()
+                    async let stat = try obj.getStatData()
+                    async let user = try obj.getUserData()
+                    print(await main,stat,user)
+                }
+               print("elapsed time \(time)")
+            }
+            
         }
        
     }
