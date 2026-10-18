@@ -41,7 +41,7 @@ struct NavigationTestingHomeView: View {
                         print("\(error) catched on mytask")
                     }
                 }
-                try? await Task.sleep(for: .seconds(3))
+                try? await Task.sleep(for: .seconds(2))
                 myTask.cancel()
             }
             
