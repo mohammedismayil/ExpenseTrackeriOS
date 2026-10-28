@@ -59,16 +59,6 @@
 		39FA8F7F3092375500C40719 /* ExpenseTrackerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ExpenseTrackerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		39FA8F8F3092375700C40719 /* Exceptions for "ExpenseTrackerWidget" folder in "ExpenseTrackerWidgetExtension" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 39FA8F7E3092375500C40719 /* ExpenseTrackerWidgetExtension */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3910696B2FEB9535003DA232 /* ExpenseTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -83,14 +73,6 @@
 		391069882FEB9536003DA232 /* ExpenseTrackerUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ExpenseTrackerUITests;
-			sourceTree = "<group>";
-		};
-		39FA8F823092375500C40719 /* ExpenseTrackerWidget */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				39FA8F8F3092375700C40719 /* Exceptions for "ExpenseTrackerWidget" folder in "ExpenseTrackerWidgetExtension" target */,
-			);
-			path = ExpenseTrackerWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -135,7 +117,6 @@
 				3910696B2FEB9535003DA232 /* ExpenseTracker */,
 				3910697E2FEB9536003DA232 /* ExpenseTrackerTests */,
 				391069882FEB9536003DA232 /* ExpenseTrackerUITests */,
-				39FA8F823092375500C40719 /* ExpenseTrackerWidget */,
 				39FA8F2D30922D7700C40719 /* Frameworks */,
 				3910696A2FEB9535003DA232 /* Products */,
 			);
@@ -245,9 +226,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				39FA8F823092375500C40719 /* ExpenseTrackerWidget */,
 			);
 			name = ExpenseTrackerWidgetExtension;
 			packageProductDependencies = (
