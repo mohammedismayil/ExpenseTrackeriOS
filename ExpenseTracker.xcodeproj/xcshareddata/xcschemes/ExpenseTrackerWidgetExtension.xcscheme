@@ -16,7 +16,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "39FA8F2B30922D7700C40719"
+               BlueprintIdentifier = "39575333309385C30096511B"
                BuildableName = "ExpenseTrackerWidgetExtension.appex"
                ReferencedContainer = "container:ExpenseTracker.xcodeproj">
             </BuildableReference>
@@ -57,9 +57,14 @@
       launchAutomaticallySubstyle = "2"
       queueDebuggingEnabled = "No">
       <RemoteRunnable
-         runnableDebuggingMode = "0"
-         BundleIdentifier = "com.apple.NanoUniverse.AegirProxyApp"
-         RemotePath = "/Library/Developer/CoreSimulator/Volumes/iOS_23F77/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 26.5.simruntime/Contents/Resources/RuntimeRoot/System/Library/CoreServices/AegirProxyApp.app">
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.springboard">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "39575333309385C30096511B"
+            BuildableName = "ExpenseTrackerWidgetExtension.appex"
+            ReferencedContainer = "container:ExpenseTracker.xcodeproj">
+         </BuildableReference>
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
