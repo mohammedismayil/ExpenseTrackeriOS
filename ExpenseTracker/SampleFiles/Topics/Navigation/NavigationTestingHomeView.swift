@@ -12,6 +12,9 @@ struct NavigationTestingHomeView: View {
     var array: [String] = ["john","peter", "smith"]
     var body: some View {
         NavigationStack {
+            Button("Expense") {
+                incrementExpense()
+            }
             List(array, id: \.self) { item in
                 NavigationLink(destination: NavigationTestingDetailView(user: item)) {
                     Button(item){
@@ -47,6 +50,17 @@ struct NavigationTestingHomeView: View {
             
         }
        
+    }
+    
+    
+    func incrementExpense() {
+        let defaults = UserDefaults(suiteName: "group.ismayil.ExpenseTracker")
+        if let existingValue = defaults?.value(forKey: "totalexpense") as? Double {
+            defaults?.set(existingValue+100, forKey: "totalexpense")
+        } else {
+            defaults?.set(1000, forKey: "totalexpense")
+        }
+        
     }
 }
 
