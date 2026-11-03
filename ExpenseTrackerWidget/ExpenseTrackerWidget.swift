@@ -25,6 +25,9 @@ struct ExpenseTrackerWidgetView: View {
             Text("Total expense").font(.caption)
             Text(entry.totalExpense,format: .currency(code: "INR"))
         }
+        .containerBackground(for: .widget) {
+                Color.blue // Or any ShapeStyle/View
+            }
     }
 }
 
@@ -46,11 +49,11 @@ struct ExpenseTrackerWidgetProvider: AppIntentTimelineProvider {
         ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: 0)
     }
     
-    func snapshot(for configuration: ExpenseTrackerWidgetIntent, in context: Context) async -> ExpenseTrackerWidgetTimeLine {
+    func snapshot(for configuration: Intent, in context: Context) async -> ExpenseTrackerWidgetTimeLine {
         return ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: 3000)
     }
     
-    func timeline(for configuration: ExpenseTrackerWidgetIntent, in context: Context) async -> Timeline<ExpenseTrackerWidgetTimeLine> {
+    func timeline(for configuration: Intent, in context: Context) async -> Timeline<ExpenseTrackerWidgetTimeLine> {
         return Timeline(entries: [ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: 3000)], policy: .atEnd)
     }
     
