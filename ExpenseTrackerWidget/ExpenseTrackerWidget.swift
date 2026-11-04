@@ -59,6 +59,14 @@ struct ExpenseTrackerWidgetProvider: AppIntentTimelineProvider {
     }
     
     func timeline(for configuration: Intent, in context: Context) async -> Timeline<ExpenseTrackerWidgetTimeLine> {
+        let defaults = UserDefaults(
+            suiteName: "group.ismayil.ExpenseTracker"
+        )
+        
+        print("WIDGET DEFAULTS:", defaults as Any)
+        print("WIDGET VALUE:", defaults?.object(forKey: "totalexpense") as Any)
+        print("WIDGET DOUBLE:", defaults?.double(forKey: "totalexpense") ?? -1)
+        
         let expense = defaults?.double(forKey: "totalexpense") ?? 2000
         return Timeline(entries: [ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: expense)], policy: .atEnd)
     }

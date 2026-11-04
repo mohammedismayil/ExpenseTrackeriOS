@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 struct NavigationTestingHomeView: View {
     @State var selectedUser: String?
@@ -55,11 +56,14 @@ struct NavigationTestingHomeView: View {
     
     func incrementExpense() {
         let defaults = UserDefaults(suiteName: "group.ismayil.ExpenseTracker")
-        if let existingValue = defaults?.value(forKey: "totalexpense") as? Double {
-            defaults?.set(existingValue+100, forKey: "totalexpense")
-        } else {
-            defaults?.set(1000, forKey: "totalexpense")
-        }
+
+        defaults?.set(1000.0, forKey: "totalexpense")
+        defaults?.synchronize()
+
+        print("APP SAVED:", defaults?.object(forKey: "totalexpense") ?? "nil")
+        print("APP READ:", defaults?.double(forKey: "totalexpense") ?? -1)
+
+        WidgetCenter.shared.reloadAllTimelines()
         
     }
 }
