@@ -9,16 +9,37 @@ import Foundation
 import Combine
 import SwiftUI
 
-class CartViewViewModel: ObservableObject {
-    @Published var count: Int = 0
+//Contract Model
+@MainActor
+protocol CartViewModelProtocol: ObservableObject {
+    var countText: String { get }
+    var canShowCartView: Bool { get }
+    func incrementButtonTapped()
+    func decrementButtonTapped()
+}
+
+@Observable
+class CartViewViewModel: CartViewModelProtocol {
+    private var count = 0
     
-    func increment() {
-        self.count += 1
+    var countText: String {
+        return String(count)
     }
     
-    func decrement() {
+    var canShowCartView: Bool {
         if count > 0 {
-            count -= 1
+            return true
         }
+        return false
     }
+    
+    func incrementButtonTapped() {
+        count += 1
+    }
+    
+    func decrementButtonTapped() {
+        count -= 1
+    }
+    
+    
 }

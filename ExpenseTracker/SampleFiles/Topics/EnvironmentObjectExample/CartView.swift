@@ -7,27 +7,34 @@
 
 import SwiftUI
 struct CartScreenView: View {
-    @EnvironmentObject var viewModel: CartViewViewModel
+    var viewModel: CartViewViewModel
     var body: some View {
-        CartView()
+        CartView(vm: viewModel)
     }
 }
-struct CartView: View {
-    @EnvironmentObject var viewModel: CartViewViewModel
+struct CartView<VM: CartViewModelProtocol>: View {
+    let vm: VM
     var body: some View {
         HStack {
             Button("+") {
-                viewModel.increment()
+                vm.incrementButtonTapped()
             }
-            Text("\(viewModel.count)")
+            Text("\(vm.countText)")
             Button("-") {
-                viewModel.decrement()
+                vm.decrementButtonTapped()
             }
         }
         
     }
 }
 
+struct CartViewRoute: View {
+    @State var viewModel: CartViewViewModel = CartViewViewModel()
+    var body: some View {
+        CartView(vm: viewModel)
+    }
+}
+
 #Preview {
-    CartScreenView()
+//    CartScreenView()
 }

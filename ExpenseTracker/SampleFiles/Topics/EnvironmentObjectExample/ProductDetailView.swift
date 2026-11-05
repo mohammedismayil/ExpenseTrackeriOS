@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct EnvironmentalObjectProductDetailView: View {
-    @EnvironmentObject var viewModel: CartViewViewModel
+    var viewModel: CartViewViewModel
     var body: some View {
-        if viewModel.count > 0 {
-            CartView()
+        if viewModel.canShowCartView {
+            CartView(vm: viewModel)
         } else {
             EmptyView()
         }
@@ -19,5 +19,5 @@ struct EnvironmentalObjectProductDetailView: View {
 }
 
 #Preview {
-    EnvironmentalObjectProductDetailView()
+//    EnvironmentalObjectProductDetailView()
 }

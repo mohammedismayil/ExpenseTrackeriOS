@@ -13,7 +13,7 @@ import SwiftData
 struct ExpenseTrackerApp: App {
     @State private var loginViewModel = LoginViewModel()
     @Environment(\.scenePhase) private var scenePhase
-    @StateObject var cartViewModel: CartViewViewModel = CartViewViewModel()
+    var cartViewModel: CartViewViewModel = CartViewViewModel()
     @UIApplicationDelegateAdaptor(Appdelegate.self)
     var appdelegate
     var body: some Scene {
@@ -25,7 +25,8 @@ struct ExpenseTrackerApp: App {
             if #available(iOS 18.0, *) {
                 TabView {
                     Tab ("", systemImage: "house", content: {
-                        ModelScanner()
+                        CartViewRoute()
+//                        ModelScanner()
 //                        NavigationTestingHomeView()
 //                        SearchDebounceView()
                         //                        SampleUsersListView()
@@ -48,7 +49,7 @@ struct ExpenseTrackerApp: App {
                     })
                     Tab ("", systemImage: "plus", content: {
 //                        PhotosListView(searchText: "")
-                        CartScreenView()
+//                        CartScreenView()
                     })
                     Tab ("", systemImage: "chart.pie.fill", content: {
                         SampleUserDetailsView(userDetails: [])

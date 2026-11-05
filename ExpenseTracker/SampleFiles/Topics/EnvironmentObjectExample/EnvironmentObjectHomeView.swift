@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct EnvironmentObjectHomeView: View {
-    @EnvironmentObject var viewModel: CartViewViewModel
+   var viewModel: CartViewViewModel
     var body: some View {
         VStack {
             Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-            if viewModel.count > 0 {
-                CartView()
+            if viewModel.canShowCartView {
+                CartView(vm: viewModel)
             } else {
                 EmptyView()
             }
@@ -23,5 +23,5 @@ struct EnvironmentObjectHomeView: View {
 }
 
 #Preview {
-    EnvironmentObjectHomeView()
+//    EnvironmentObjectHomeView()
 }
