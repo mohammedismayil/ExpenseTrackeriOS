@@ -34,36 +34,6 @@
             endingLineNumber = "54"
             landmarkName = "fetchUsers()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "499DBEEB-3BC3-4C1A-BF3F-FEB312E3A580 - b863da965bd9de14"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for ExpenseTracker.DemoViewService.fetchUsers() async throws -&gt; Swift.Array&lt;ExpenseTracker.DemoUserModel&gt;"
-                  moduleName = "ExpenseTracker.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/Topics/ViewModelTask/DemoViewModelView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "54"
-                  endingLineNumber = "54">
-               </Location>
-               <Location
-                  uuid = "499DBEEB-3BC3-4C1A-BF3F-FEB312E3A580 - b863da965bd9de14"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for ExpenseTracker.DemoViewService.fetchUsers() async throws -&gt; Swift.Array&lt;ExpenseTracker.DemoUserModel&gt;"
-                  moduleName = "ExpenseTracker.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/mohammedismayil/Desktop/ExpenseTracker/ExpenseTracker/SampleFiles/Topics/ViewModelTask/DemoViewModelView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "54"
-                  endingLineNumber = "54">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -76,8 +46,8 @@
             filePath = "ExpenseTrackerWidget/ExpenseTrackerWidget.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
             landmarkName = "timeline(for:in:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -128,6 +98,22 @@
             endingLineNumber = "26"
             landmarkName = "countText"
             landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6058D4CB-877D-49ED-9E12-10F790880BF0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ExpenseTracker/SampleFiles/Topics/Navigation/NavigationTestingHomeView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "60"
+            endingLineNumber = "60"
+            landmarkName = "incrementExpense()"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

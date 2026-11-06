@@ -45,22 +45,21 @@ struct ExpenseTrackerWidgetProvider: AppIntentTimelineProvider {
    typealias Entry = ExpenseTrackerWidgetTimeLine
     typealias Intent = ExpenseTrackerWidgetIntent
     
-    let defaults = UserDefaults(
-        suiteName: "group.ismayil.ExpenseTracker"
-    )
-    
     func placeholder(in context: Context) -> Entry {
         ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: 0)
     }
     
     func snapshot(for configuration: Intent, in context: Context) async -> ExpenseTrackerWidgetTimeLine {
+        let defaults = UserDefaults(
+            suiteName: "group.ismayil.expensetracker"
+        )
         let expense = defaults?.double(forKey: "totalexpense") ?? 2000
         return ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: expense)
     }
     
     func timeline(for configuration: Intent, in context: Context) async -> Timeline<ExpenseTrackerWidgetTimeLine> {
         let defaults = UserDefaults(
-            suiteName: "group.ismayil.ExpenseTracker"
+            suiteName: "group.ismayil.expensetracker"
         )
         
         print("WIDGET DEFAULTS:", defaults as Any)
@@ -68,7 +67,7 @@ struct ExpenseTrackerWidgetProvider: AppIntentTimelineProvider {
         print("WIDGET DOUBLE:", defaults?.double(forKey: "totalexpense") ?? -1)
         
         let expense = defaults?.double(forKey: "totalexpense") ?? 2000
-        return Timeline(entries: [ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: expense)], policy: .atEnd)
+        return Timeline(entries: [ExpenseTrackerWidgetTimeLine(date: Date(), totalExpense: expense)], policy: .never)
     }
     
 }

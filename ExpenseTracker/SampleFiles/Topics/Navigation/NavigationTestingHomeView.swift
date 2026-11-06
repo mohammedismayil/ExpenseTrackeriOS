@@ -55,14 +55,14 @@ struct NavigationTestingHomeView: View {
     
     
     func incrementExpense() {
-        let defaults = UserDefaults(suiteName: "group.ismayil.ExpenseTracker")
-
-        defaults?.set(1000.0, forKey: "totalexpense")
-        defaults?.synchronize()
-
+        let defaults = UserDefaults(suiteName: "group.ismayil.expensetracker")
+        if let existingValue = defaults?.double(forKey: "totalexpense") {
+            defaults?.set(existingValue+100, forKey: "totalexpense")
+        } else {
+            defaults?.set(1000.0, forKey: "totalexpense")
+        }
         print("APP SAVED:", defaults?.object(forKey: "totalexpense") ?? "nil")
         print("APP READ:", defaults?.double(forKey: "totalexpense") ?? -1)
-
         WidgetCenter.shared.reloadAllTimelines()
         
     }
