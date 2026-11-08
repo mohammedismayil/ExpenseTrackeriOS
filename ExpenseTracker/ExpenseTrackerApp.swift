@@ -54,7 +54,8 @@ struct ExpenseTrackerApp: App {
                         ScannerView()
                     })
                     Tab ("", systemImage: "chart.pie.fill", content: {
-                        SampleUserDetailsView(userDetails: [])
+//                        SampleUserDetailsView(userDetails: [])
+                        GroupExample()
                     })
                     Tab ("", systemImage: "person.fill", content: {
                         if  loginViewModel.isLoggedIn {
