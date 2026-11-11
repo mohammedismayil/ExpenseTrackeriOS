@@ -25,7 +25,8 @@ struct ExpenseTrackerApp: App {
             if #available(iOS 18.0, *) {
                 TabView {
                     Tab ("", systemImage: "house", content: {
-                        CartViewRoute()
+                        ExpenseOverviewView()
+                        //CartViewRoute()
 //                        ModelScanner()
 //                        NavigationTestingHomeView()
 //                        SearchDebounceView()
@@ -36,7 +37,8 @@ struct ExpenseTrackerApp: App {
 //                        OperationQueueExampleView()
                     })
                     Tab ("", systemImage: "magnifyingglass", content: {
-                        NavigationTestingHomeView()
+                        
+//                        NavigationTestingHomeView()
 //                        ConcurrencySampleView()
 //                        GeometryReaderExample()
                         //                        DemoViewModelView()
