@@ -15,7 +15,7 @@ struct ExpenseOverviewView: View {
         NavigationStack {
             Text("Your money at a glance")
             Text("Overview")
-            Text(viewModel.totalExpense.description).font(.largeTitle)
+            Text(viewModel.totalExpense.description).font(.system(size: 36)).fontWeight(.heavy)
             Button("+") {
                 isAddExpenseTapped = true
             }.navigationDestination(isPresented: $isAddExpenseTapped) {

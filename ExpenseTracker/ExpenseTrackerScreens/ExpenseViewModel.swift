@@ -10,12 +10,14 @@ import Combine
 
 @Observable
 class ExpenseViewModel: ObservableObject {
-    var totalExpense: Double {
-        let defaults = UserDefaults(
-            suiteName: "group.ismayil.expensetracker"
-        )
-        let expense = defaults?.double(forKey: "totalexpense") ?? 2000
-        return expense
+    
+    let defaults = UserDefaults(
+        suiteName: "group.ismayil.expensetracker"
+    )
+    var totalExpense: Double
+    
+    init() {
+        self.totalExpense = defaults?.double(forKey: "totalexpense") ?? 1000
     }
     
     
@@ -24,6 +26,7 @@ class ExpenseViewModel: ObservableObject {
             suiteName: "group.ismayil.expensetracker"
         )
         let value = defaults?.double(forKey: "totalexpense") ?? 1000
+        totalExpense = value + expense
         defaults?.set(value+expense, forKey: "totalexpense")
     }
     
