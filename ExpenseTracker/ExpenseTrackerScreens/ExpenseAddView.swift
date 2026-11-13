@@ -68,13 +68,9 @@ struct TotalSpentCard: View {
                             .stroke(.black, lineWidth: 1)
                     }
                 }
-                HStack {
-                    Text("$2000")
-                        .foregroundStyle(.white)
-                        .font(.system(size: 44, weight: .bold))
-                    Spacer()
-                }
-                
+                Text("$2000")
+                    .foregroundStyle(.white)
+                    .font(.system(size: 44, weight: .bold))
                 ComparisonChip(percentage: "12.78", month: "OCT")
                 WeeklyExpenseChart()
             })
