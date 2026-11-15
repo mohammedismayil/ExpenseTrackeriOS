@@ -13,7 +13,9 @@ struct Expense {
     let amount: Double
 }
 
-struct MonthlyExpense {
+struct MonthlyExpense: Identifiable {
+    let id: String
+    
     let month: String
     let amount: Double
 }
@@ -23,15 +25,22 @@ struct MonthlyExpense {
 struct ChartExample: View {
     let expenses: [Expense] = [.init(category: "Food", amount: 1000),.init(category: "Travel", amount: 300),.init(category: "Fuel", amount: 500)]
     
-    let monthlyExpense: [MonthlyExpense] = [MonthlyExpense(month: "Jan", amount: 18000),
-        MonthlyExpense(month: "Feb", amount: 22000),
-        MonthlyExpense(month: "Mar", amount: 19500),
-        MonthlyExpense(month: "Apr", amount: 25000),
-        MonthlyExpense(month: "May", amount: 21000)]
+    let monthlyExpense: [MonthlyExpense] = [MonthlyExpense(id: "1", month: "Jan", amount: 18000),
+        MonthlyExpense(id: "2", month: "Feb", amount: 22000),
+        MonthlyExpense(id: "3",month: "Mar", amount: 19500),
+        MonthlyExpense(id: "4",month: "Apr", amount: 25000),
+        MonthlyExpense(id: "5",month: "May", amount: 21000)]
     
     var body: some View {
-        barMarkChart
-        lineMarkChart
+        ScrollView {
+            VStack {
+                barMarkChart
+                lineMarkChart
+                areaMarkChart
+            }
+           
+        }
+       
     }
     
     
@@ -57,11 +66,15 @@ struct ChartExample: View {
     @ViewBuilder
     var lineMarkChart: some View {
         Chart(monthlyExpense, id: \.month) { expense in
-            LineMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount))
+            LineMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount)).interpolationMethod(.catmullRom)
             PointMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount))
         }
         .chartXAxis {
-            
+            AxisMarks { value in
+                AxisGridLine()
+                AxisTick()
+                AxisValueLabel()
+            }
         }
         .chartYAxis {
             AxisMarks { value in
@@ -80,7 +93,48 @@ struct ChartExample: View {
     }
     
     func getRoundedAmount(amount: Double) -> String {
-        return "₹\(amount/1000)K"
+        if #available(iOS 18, *) {
+            return amount.formatted(.currency(code: "INR").notation(.compactName))
+        } else {
+            // Fallback on earlier versions
+            return "\(amount)"
+        }
+    }
+    
+    
+    @ViewBuilder
+    var areaMarkChart: some View {
+        Chart {
+            ForEach(monthlyExpense) { expense in
+                AreaMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount)).foregroundStyle(LinearGradient(colors: [.green.opacity(0.5), .green.opacity(0.05)], startPoint: .top, endPoint: .bottom)).interpolationMethod(.catmullRom)
+                LineMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount)).interpolationMethod(.catmullRom).foregroundStyle(.green)
+            }
+            
+            RuleMark(y: .value("Budget", 22000)).lineStyle(StrokeStyle(lineWidth: 1,dash: [10])).annotation(position: .top, alignment: .leading) {
+                Text("Budget")
+            }.foregroundStyle(.red)
+        }
+        .chartXAxis {
+            AxisMarks { value in
+                AxisGridLine()
+                AxisTick()
+                AxisValueLabel {
+                    if let month = value.as(String.self) {
+                        Text(month)
+                    }
+                }
+            }
+        }
+        .chartYAxis {
+            AxisMarks { value in
+                    AxisGridLine()
+                    AxisValueLabel {
+                        if let amount = value.as(Double.self) {
+                            Text(getRoundedAmount(amount: amount))
+                        }
+                    }
+                }
+        }
     }
 }
 
