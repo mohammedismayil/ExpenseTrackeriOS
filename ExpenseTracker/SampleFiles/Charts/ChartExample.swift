@@ -56,7 +56,9 @@ struct ChartExample: View {
             AxisMarks { value in
                 AxisGridLine()
                 AxisTick()
-                AxisValueLabel()
+                AxisValueLabel {
+                    
+                }
             }
         }
         .frame(height: 300)
@@ -73,7 +75,9 @@ struct ChartExample: View {
             AxisMarks { value in
                 AxisGridLine()
                 AxisTick()
-                AxisValueLabel()
+                AxisValueLabel {
+                    
+                }
             }
         }
         .chartYAxis {
@@ -81,9 +85,6 @@ struct ChartExample: View {
                 AxisGridLine()
                 AxisTick()
                 AxisValueLabel {
-                    if let amount = value.as(Double.self) {
-                                    Text(getRoundedAmount(amount: amount))
-                                }
                 }
             }
         }
@@ -108,6 +109,8 @@ struct ChartExample: View {
             ForEach(monthlyExpense) { expense in
                 AreaMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount)).foregroundStyle(LinearGradient(colors: [.green.opacity(0.5), .green.opacity(0.05)], startPoint: .top, endPoint: .bottom)).interpolationMethod(.catmullRom)
                 LineMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount)).interpolationMethod(.catmullRom).foregroundStyle(.green)
+                
+                PointMark(x: .value("Month", expense.month), y: .value("Amount", expense.amount)).foregroundStyle(expense.amount > 22000 ? .red : .green)
             }
             
             RuleMark(y: .value("Budget", 22000)).lineStyle(StrokeStyle(lineWidth: 1,dash: [10])).annotation(position: .top, alignment: .leading) {
@@ -119,9 +122,6 @@ struct ChartExample: View {
                 AxisGridLine()
                 AxisTick()
                 AxisValueLabel {
-                    if let month = value.as(String.self) {
-                        Text(month)
-                    }
                 }
             }
         }
@@ -135,6 +135,8 @@ struct ChartExample: View {
                     }
                 }
         }
+        .frame(height: 300)
+        .padding()
     }
 }
 
