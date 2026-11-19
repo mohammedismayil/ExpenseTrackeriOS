@@ -11,12 +11,15 @@ struct StaticWidget: Widget {
     let kind: String = "StaticWidget"
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: StaticTimeLineProvider()) { entry in
-            StaticWidgetView()
+            StaticWidgetView(entry: entry).containerBackground(.fill.tertiary, for: .widget)
         }
+        .configurationDisplayName("Spending").description("your spending at a glance")
+        .supportedFamilies([.systemSmall,.systemMedium])
     }
 }
 
 struct StaticWidgetView: View {
+    let entry: StaticTimeLineEntry
     @Environment(\.widgetFamily) var family
     var body: some View {
         switch family {
@@ -35,8 +38,11 @@ struct StaticWidgetView: View {
     
     @ViewBuilder
     var mediumSizeWidget: some View {
-        Text("Hey there")
-        Text("Welcome")
+        VStack {
+            Text("Hey there")
+            Text("Welcome")
+        }
+        
     }
 }
 
@@ -61,4 +67,16 @@ struct StaticTimeLineProvider: TimelineProvider {
 
 struct StaticTimeLineEntry: TimelineEntry {
     let date: Date
+}
+
+#Preview(as: .systemSmall) {
+    StaticWidget()
+} timeline: {
+    StaticTimeLineEntry(date: .now)
+}
+
+#Preview(as: .systemMedium) {
+    StaticWidget()
+} timeline: {
+    StaticTimeLineEntry(date: .now)
 }
