@@ -26,6 +26,8 @@ struct Level1Widget: Widget {
                 }
                 .foregroundStyle(.white)
         }
+        .description("Your spending at a glance")
+        .configurationDisplayName("Today's Spend")
         .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
@@ -63,7 +65,7 @@ struct Level1WidgetView: View {
     var body: some View {
         switch family {
         case .systemSmall:
-            smallWidgetView
+            smallWidgetView.frame(maxWidth: .infinity, alignment: .leading)
         case .systemMedium:
             HStack(spacing: 16) {
                 smallWidgetView
