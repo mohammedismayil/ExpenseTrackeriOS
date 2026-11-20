@@ -16,13 +16,13 @@ struct Level2Widget: Widget {
         StaticConfiguration(kind: kind, provider: Level2TimeLineProvider()) { entry in
             Level2WidgetView(entry: entry)
                 .containerBackground(for: .widget) {
-                    LinearGradient(colors: [.purple, .indigo], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    LinearGradient(colors: entry.timeOfDay.colors, startPoint: .topLeading, endPoint: .bottomTrailing)
                 }
                 .foregroundStyle(.white)
         }
         .description("Your day time")
         .configurationDisplayName("Your day")
-        .supportedFamilies([.systemSmall , .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium])
     }
 }
 
@@ -39,7 +39,7 @@ struct Level2TimeLineProvider: TimelineProvider {
     func getTimeline(in context: Context, completion: @escaping (Timeline<Level2TimeLineEntry>) -> Void) {
         let calendar = Calendar.current
         var dates: [Date] = [.now]
-        for hour in [6, 12, 17, 21] {
+        for hour in [5, 12, 17, 21] {
             if let next = calendar.nextDate(after: .now,
                                             matching: DateComponents(hour: hour),
                                             matchingPolicy: .nextTime) {
@@ -47,7 +47,7 @@ struct Level2TimeLineProvider: TimelineProvider {
             }
         }
         
-        let entries = dates.sorted().map({Level2TimeLineEntry(date: $0)})
+        let entries = dates.sorted().map({Level2TimeLineEntry(date: $0, total: 100)})
 
         completion(Timeline(entries: entries, policy: .atEnd))
     }
@@ -58,7 +58,8 @@ struct Level2TimeLineEntry: TimelineEntry {
     var timeOfDay: TimeOfDay {
             TimeOfDay(hour: Calendar.current.component(.hour, from: date))
         }
-    static let sample: Level2TimeLineEntry = Level2TimeLineEntry(date: .now)
+    var total: Double
+    static let sample: Level2TimeLineEntry = Level2TimeLineEntry(date: .now, total: 10)
 }
 
 
@@ -67,8 +68,16 @@ struct Level2WidgetView: View {
     let entry: Level2TimeLineEntry
     var body: some View {
         VStack(alignment: .leading) {
-            Text(entry.timeOfDay.greeting)
-        }
+            Image(systemName: entry.timeOfDay.symbol).font(.title)
+            
+            Spacer()
+            Text(entry.timeOfDay.greeting).font(.system(.title3, design: .rounded, weight: .bold))
+            Text(entry.total, format: .currency(code: "INR").precision(.fractionLength(0)))
+                .font(.system(.title, design: .rounded, weight: .bold))
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+        }.frame(maxWidth: .infinity, alignment: .leading)
         
     }
 }
@@ -78,6 +87,36 @@ enum TimeOfDay {
     case afternoon
     case evening
     case night
+    
+    var symbol: String {
+        switch self {
+        case .morning:
+            "sun.max.fill"
+        case .afternoon:
+            "cloud.sun.fill"
+        case .evening:
+            "sunset.fill"
+        case .night:
+            "moon.stars.fill"
+        }
+    }
+    
+    var colors: [Color] {
+        switch self {
+        case .morning:   // warm sunrise: orange into rose
+            [Color(red: 0.90, green: 0.38, blue: 0.05),
+             Color(red: 0.80, green: 0.20, blue: 0.35)]
+        case .afternoon: // daytime sky: blue into teal
+            [Color(red: 0.08, green: 0.38, blue: 0.80),
+             Color(red: 0.10, green: 0.58, blue: 0.78)]
+        case .evening:   // sunset: red-orange into purple
+            [Color(red: 0.85, green: 0.30, blue: 0.20),
+             Color(red: 0.45, green: 0.15, blue: 0.55)]
+        case .night:     // deep indigo into near-black
+            [Color(red: 0.15, green: 0.10, blue: 0.45),
+             Color(red: 0.02, green: 0.02, blue: 0.12)]
+        }
+    }
     
     var greeting: String {
         switch self {
@@ -101,4 +140,17 @@ enum TimeOfDay {
             }
         }
 
+}
+
+private func at(_ hour: Int) -> Date {
+    Calendar.current.date(bySettingHour: hour, minute: 0, second: 0, of: .now)!
+}
+
+#Preview(as: .systemSmall) {
+    Level2Widget()
+} timeline: {
+    Level2TimeLineEntry(date: at(8), total: 120)
+    Level2TimeLineEntry(date: at(14), total: 120)
+    Level2TimeLineEntry(date: at(18), total: 120)
+    Level2TimeLineEntry(date: at(23), total: 120)
 }
