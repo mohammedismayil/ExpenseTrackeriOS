@@ -9,6 +9,7 @@ import Foundation
 import WidgetKit
 import Foundation
 import SwiftUI
+import Charts
 
 struct Level3Widget: Widget {
     let kind = "Level3Widget"
@@ -18,35 +19,82 @@ struct Level3Widget: Widget {
                 .containerBackground(for: .widget) {
                     Color.blue
                 }
-                .foregroundStyle(.white)
+                
         }
         .description("Your spending at a glance")
         .configurationDisplayName("Today's Spend")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([.systemSmall, .systemMedium, .accessoryCircular])
     }
 }
 
 struct Level3WidgetView: View {
     let entry: Level3TimeLineEntry
+    @Environment(\.widgetFamily) var family
     var body: some View {
-        Text(entry.budget,format: .number)
+        
+        switch family {
+        case .systemSmall:
+            smallWidgetView.foregroundStyle(.white)
+        case .systemMedium:
+            mediumWidgetView.foregroundStyle(.white)
+        case .accessoryCircular:
+            accessoryCircularWidgetView
+        default:
+            EmptyView()
+        }
     }
     
     var smallWidgetView: some View {
         VStack(alignment: .leading) {
             Image(systemName: "indianrupeesign")
-                .font(.headline)
-                .frame(width: 32, height: 32)
-                .background(.white.opacity(0.2), in: Circle())
+                        .font(.headline)
+                        .frame(width: 32, height: 32)
+                        .background(.white.opacity(0.2), in: Circle())
             Spacer()
             Text("Today").font(.caption).foregroundStyle(.white.opacity(0.7))
-            Text(entry.total, format: .currency(code: "INR").precision(.fractionLength(0)))
-                .font(.system(.title, design: .rounded, weight: .bold))
-                .monospacedDigit()
-                .lineLimit(1)
-                .minimumScaleFactor(0.6)
+            VStack(spacing: 10) {
+                Text(entry.total, format: .currency(code: "INR").precision(.fractionLength(0)))
+                            .font(.system(.title, design: .rounded, weight: .bold))
+                            .monospacedDigit()
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.6)
+                            .layoutPriority(1)
+                Text("of \(entry.budget, format: .currency(code: "INR").precision(.fractionLength(0)))")
+                    .font(.caption2)
+                    .foregroundStyle(.white.opacity(0.7))
+                
+            }
+            
         }
-        
+    }
+    
+    var mediumWidgetView: some View {
+        HStack {
+            smallWidgetView
+            Chart(entry.week) { spend in
+                BarMark(x: .value("Date", spend.date, unit: .day),
+                        y: .value("Amount", spend.amount))
+                    .foregroundStyle(Calendar.current.isDateInToday(spend.date) ? .white : .white.opacity(0.4))
+                    .cornerRadius(4)
+            }
+            .chartYAxis(.hidden)
+            .chartXAxis {
+                AxisMarks(values: .stride(by: .day)) { _ in
+                    AxisValueLabel(format: .dateTime.weekday(.narrow))
+                        .foregroundStyle(.white.opacity(0.7))
+                }
+            }
+                .frame(maxWidth: .infinity)
+        }
+    }
+    
+    var accessoryCircularWidgetView: some View {
+        Gauge(value: min(entry.total, entry.budget), in: 0...entry.budget) {
+            Image(systemName: "indianrupeesign")
+        } currentValueLabel: {
+            Text(entry.total, format: .number.notation(.compactName))
+        }
+        .gaugeStyle(.accessoryCircularCapacity)
     }
 }
 
@@ -94,3 +142,8 @@ struct DailySpend: Identifiable {
     let date: Date
     let amount: Double
 }
+
+//
+//#Preview(as: .systemSmall)       { Level3Widget() } timeline: { Level3TimeLineEntry.sample }
+//#Preview(as: .systemMedium)      { Level3Widget() } timeline: { Level3TimeLineEntry.sample }
+//#Preview(as: .accessoryCircular) { Level3Widget() } timeline: { Level3TimeLineEntry.sample }

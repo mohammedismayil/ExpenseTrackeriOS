@@ -68,11 +68,28 @@
 			);
 			target = 39575333309385C30096511B /* ExpenseTrackerWidgetExtension */;
 		};
+		3967CBCD30B156EF006D2907 /* Exceptions for "ExpenseTrackerWidget" folder in "ExpenseTracker" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				LiveActivity/FootballScoreBoardActivity.swift,
+			);
+			target = 391069682FEB9535003DA232 /* ExpenseTracker */;
+		};
+		3967CBCF30B15C39006D2907 /* Exceptions for "ExpenseTracker" folder in "ExpenseTracker" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 391069682FEB9535003DA232 /* ExpenseTracker */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3910696B2FEB9535003DA232 /* ExpenseTracker */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3967CBCF30B15C39006D2907 /* Exceptions for "ExpenseTracker" folder in "ExpenseTracker" target */,
+			);
 			path = ExpenseTracker;
 			sourceTree = "<group>";
 		};
@@ -89,6 +106,7 @@
 		39575337309385C30096511B /* ExpenseTrackerWidget */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				3967CBCD30B156EF006D2907 /* Exceptions for "ExpenseTrackerWidget" folder in "ExpenseTracker" target */,
 				39575344309385C40096511B /* Exceptions for "ExpenseTrackerWidget" folder in "ExpenseTrackerWidgetExtension" target */,
 			);
 			path = ExpenseTrackerWidget;
@@ -524,7 +542,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExpenseTracker/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "camera access";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -571,7 +591,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ExpenseTracker/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "camera access";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
