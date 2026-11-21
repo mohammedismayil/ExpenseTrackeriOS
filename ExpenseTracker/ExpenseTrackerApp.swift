@@ -38,6 +38,7 @@ struct ExpenseTrackerApp: App {
                     })
                     Tab ("", systemImage: "magnifyingglass", content: {
                         
+                        DailyScreenTimeChart()
 //                        NavigationTestingHomeView()
 //                        ConcurrencySampleView()
 //                        GeometryReaderExample()
