@@ -25,6 +25,16 @@ struct GroupExample: View {
             }
         }.padding(.vertical, 20)
         
+        
+        Button("Start phone call") {
+            do {
+                let attributes = PhoneCallActivityAttributes()
+                let activity = try Activity.request(attributes: attributes, content: .init(state: .init(callState: .hold), staleDate: .none), pushType: .none)
+            } catch {
+                print(error)
+            }
+        }.padding(.vertical, 20)
+        
         Button("Stop scoreboard") {
             Task {
                 for activity in Activity<FootballScoreBoardActivityAttributes>.activities {

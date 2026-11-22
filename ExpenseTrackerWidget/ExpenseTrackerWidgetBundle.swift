@@ -12,6 +12,7 @@ import SwiftUI
 struct ExpenseTrackerWidgetBundle: WidgetBundle {
     var body: some Widget {
         Level3Widget()
+        PhoneCallActivity()
         FootballScoreBoardActivity()
 //        Level2Widget()
 //        Level1Widget()

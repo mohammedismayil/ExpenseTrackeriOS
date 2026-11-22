@@ -72,6 +72,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				LiveActivity/FootballScoreBoardActivity.swift,
+				LiveActivity/PhoneCallActivity.swift,
 			);
 			target = 391069682FEB9535003DA232 /* ExpenseTracker */;
 		};
