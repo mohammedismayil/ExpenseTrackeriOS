@@ -51,7 +51,7 @@ struct PhoneCallActivityExpandedCenterView: View {
             Text("Video call")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-        }.padding(.top,12)
+        }.padding(.leading,-50)
         Spacer()
     }
 }
@@ -89,58 +89,23 @@ struct PhoneCallActivity: Widget {
         } dynamicIsland: { context in
             
             DynamicIsland {
+                
                 DynamicIslandExpandedRegion(.leading) {
-                    HStack(spacing: 10) {
-                        
-                        Circle()
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        Color.gray.opacity(0.65),
-                                        Color.purple.opacity(0.45)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
-                            )
-                            .frame(width: 58, height: 58)
-                            .overlay {
-                                Text("S")
-                                    .font(.system(
-                                        size: 30,
-                                        weight: .medium
-                                    ))
-                                    .foregroundStyle(.white)
-                            }
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            
-                            Text("Sams machan")
-                                .font(.system(
-                                    size: 17,
-                                    weight: .semibold
-                                ))
-                                .foregroundStyle(.white)
-                                .lineLimit(1)
-                            
-                            Text("04:29")
-                                .font(.system(
-                                    size: 17,
-                                    weight: .regular
-                                ))
-                                .foregroundStyle(.gray)
-                        }
+                    Image(systemName: "profile").resizable().frame(width: 30,height: 30)
+                    VStack(alignment: .leading) {
+                        Text("Sams machan")
+                        Text("8:00")
                     }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    PhoneCallActivityExpandedTrailingView()
+                    DebugRegionView(name: "Trailing", color: .gray)
                 }
                 DynamicIslandExpandedRegion(.center) {
-                    PhoneCallActivityExpandedCenterView()
+                    DebugRegionView(name: "Center", color: .green)
                 }
                 
                 DynamicIslandExpandedRegion(.bottom) {
-                    PhoneCallActivityExpandedBottomView()
+                    DebugRegionView(name: "Bottom", color: .purple)
                 }
             } compactLeading: {
                 PhoneCallActivityLeadingView()
@@ -167,4 +132,31 @@ struct PhoneCallActivityAttributes: ActivityAttributes {
         }
     }
     
+}
+
+struct DebugRegionView: View {
+    let name: String
+    let color: Color
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack {
+                color.opacity(0.25)
+
+                VStack(spacing: 2) {
+                    Text(name)
+                        .font(.caption)
+                        .bold()
+
+                    Text("\(Int(proxy.size.width)) × \(Int(proxy.size.height))")
+                        .font(.caption2)
+                }
+                .foregroundStyle(color)
+            }
+            .overlay {
+                Rectangle()
+                    .stroke(color, lineWidth: 2)
+            }
+        }
+    }
 }

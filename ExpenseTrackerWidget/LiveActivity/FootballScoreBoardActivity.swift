@@ -21,14 +21,14 @@ struct FootballScoreBoardActivity: Widget {
                     HStack {
                         VStack {
                             Image(systemName: "heart.fill").frame(width: 30,height: 30)
-                            Text(context.state.teamA)
+                            Text(context.attributes.teamA)
                         }
                         VStack(alignment: .center) {
                             Text("\(context.state.teamAScore) - \(context.state.teamBScore)")
                         }
                         VStack {
                             Image(systemName: "heart.fill").frame(width: 30,height: 30)
-                            Text(context.state.teamB)
+                            Text(context.attributes.teamB)
                         }
                     }
                 }
@@ -49,46 +49,36 @@ struct FootballScoreBoardActivity: Widget {
 }
 
 struct FootballScoreBoardActivityAttributes: ActivityAttributes {
-    typealias ContentState = FootballScoreBoardModel
-    
-    struct FootballScoreBoardModel: Codable, Hashable {
-        let teamA: String
-        let teamB: String
-        
+    struct ContentState: Codable, Hashable {
         var teamAScore: Int
         var teamBScore: Int
-        
+        var minute: Int
+        var status: String          // "LIVE", "HT", "FT"
     }
-    
+    // Static for the whole activity
+    let matchID: String
+    let teamA: String
+    let teamB: String
 }
 
 
 struct FootballScoreBoardLockScreenView: View {
     let dataModel: ActivityViewContext<FootballScoreBoardActivityAttributes>
     var body: some View {
-        VStack(alignment: .center, spacing: 10) {
-            HStack(alignment: .center) {
-                VStack(spacing: 2
-                       , content: {
-                    Text("Arsenal")
-                    Circle().fill(.red).frame(width: 15, height: 15)
-                })
-                VStack(spacing: 2
-                       , content: {
-                    Text("Chelsea")
-                    Circle().fill(.blue).frame(width: 15, height: 15)
-                })
-            }
-            
+        VStack(spacing: 10) {
             HStack {
-                Text("2 - 1").font(.system(size: 28, weight: .bold))
+                Text(dataModel.attributes.teamA)
+                Text("\(dataModel.state.teamAScore) - \(dataModel.state.teamBScore)")
+                    .font(.system(size: 28, weight: .bold))
+                    .contentTransition(.numericText())
+                Text(dataModel.attributes.teamB)
             }
-            
             HStack {
                 Circle().fill(.green).frame(width: 10, height: 10)
-                Text("LIVE").font(.system(size: 15, weight: .bold))
-                Text("72.18").font(.system(size: 13, weight: .light))
+                Text(dataModel.state.status).bold()
+                Text("\(dataModel.state.minute)'")
             }
-        }.padding(.vertical,15)
+        }
+        .padding(.vertical, 15)
     }
 }

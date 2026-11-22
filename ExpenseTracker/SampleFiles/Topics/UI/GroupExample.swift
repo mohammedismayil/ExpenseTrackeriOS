@@ -17,9 +17,8 @@ struct GroupExample: View {
         }.font(.largeTitle)
         
         Button("Start scoreboard") {
-            do {
-                let attributes = FootballScoreBoardActivityAttributes()
-                let activity = try Activity.request(attributes: attributes, content: .init(state: .init(teamA: "Chelsea", teamB: "Man UTD", teamAScore: 0, teamBScore: 0), staleDate: .none), pushType: .none)
+            do  {
+                try startMatchActivity()
             } catch {
                 print(error)
             }
@@ -47,10 +46,29 @@ struct GroupExample: View {
         Button("Chelsea") {
             
         }
+        
+        
+        
     }
     
-    func activateFootballScoreBoard() {
-        
+    func startMatchActivity() throws {
+        let attrs = FootballScoreBoardActivityAttributes(matchID: "m123", teamA: "Arsenal", teamB: "Chelsea")
+        let state = FootballScoreBoardActivityAttributes.ContentState(
+            teamAScore: 0, teamBScore: 0, minute: 0, status: "LIVE")
+
+        let activity = try Activity.request(
+            attributes: attrs,
+            content: .init(state: state, staleDate: nil),
+            pushType: .none            // this enables remote updates
+        )
+
+        Task {
+            // The token can change, so keep listening
+            for await tokenData in activity.pushTokenUpdates {
+                let token = tokenData.map { String(format: "%02x", $0) }.joined()
+//                await api.registerLiveActivityToken(token, matchID: attrs.matchID)
+            }
+        }
     }
 }
 
