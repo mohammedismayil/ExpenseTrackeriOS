@@ -7,14 +7,38 @@
 
 import SwiftUI
 import Combine
+import Foundation
 
 struct SearchDebounceView: View {
     @StateObject var viewModel: SearchViewModel = SearchViewModel()
+    
+    @State var searchText: String = ""
+    
+    @State var searchTask: Task<Void, Never>?
     var body: some View {
         VStack {
             Text("SearchDebounceView")
-            TextField("Search", text: $viewModel.searchText)
+            TextField("Search", text: $searchText)
+                .onChange(of: searchText) {
+                    Task {
+                        await searchAPI(value: searchText)
+                    }
+                }
         }
+    }
+    
+    
+    func searchAPI(value: String) async {
+        
+        searchTask?.cancel()
+        searchTask = Task {
+            try? await Task.sleep(for: .seconds(2))
+            if Task.isCancelled {
+                return
+            }
+            print("Search api called for \(value)")
+        }
+        
     }
     
     
