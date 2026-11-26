@@ -57,7 +57,8 @@ struct ExpenseTrackerApp: App {
 //                        ScannerView()
 //                        SearchDebounceView()
 //                        DownloadExampleView()
-                        ActorsBasicsView()
+//                        ActorsBasicsView()
+                        BarrierExampleView()
                     })
                     Tab ("", systemImage: "chart.pie.fill", content: {
 //                        SampleUserDetailsView(userDetails: [])
